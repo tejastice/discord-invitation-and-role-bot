@@ -947,15 +947,40 @@ def render_bot_install_success_page(guild_id, permissions):
     """Bot招待成功ページをレンダリング"""
     # Botからサーバー情報を取得
     try:
+        import asyncio
         from discord_bot.bot import bot
+        
+        app.logger.info(f"Bot instance: {bot}")
+        app.logger.info(f"Bot is ready: {bot.is_ready()}")
+        app.logger.info(f"Bot guilds count: {len(bot.guilds)}")
+        app.logger.info(f"Trying to get guild: {guild_id}")
+        
         guild = bot.get_guild(int(guild_id))
+        app.logger.info(f"Guild from cache: {guild}")
+        
+        if not guild:
+            # キャッシュにない場合はfetchで試す
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                guild = loop.run_until_complete(bot.fetch_guild(int(guild_id)))
+                app.logger.info(f"Guild fetched: {guild}")
+                loop.close()
+            except Exception as fetch_error:
+                app.logger.error(f"Failed to fetch guild: {fetch_error}")
+                guild = None
+        
         if guild:
             guild_name = guild.name
             guild_icon_url = guild.icon.url if guild.icon else None
+            app.logger.info(f"Guild info - Name: {guild_name}, Icon: {guild_icon_url}")
         else:
             guild_name = "サーバー"
             guild_icon_url = None
-    except:
+            app.logger.warning(f"Could not get guild info for guild_id: {guild_id}")
+            
+    except Exception as e:
+        app.logger.error(f"Error getting guild info: {e}")
         guild_name = "サーバー"
         guild_icon_url = None
     
