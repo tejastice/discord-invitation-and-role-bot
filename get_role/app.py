@@ -401,8 +401,8 @@ def render_error_page(message: str, status: int = 500):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>エラー - Discord Invitation & Role Bot</title>
-        <meta name="description" content="処理中にエラーが発生しました">
+        <title>無効なリンク - Discord Invitation & Role Bot</title>
+        <meta name="description" content="無効な招待リンクです">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -621,8 +621,8 @@ def render_error_page(message: str, status: int = 500):
         <div class="container">
             <!-- Error Header -->
             <div class="error-header">
-                <div class="error-icon">❌</div>
-                <h1 class="page-title">エラーが発生しました</h1>
+                <div class="error-icon">⚠️</div>
+                <h1 class="page-title">無効なリンク</h1>
             </div>
             
             <!-- Error Message -->
