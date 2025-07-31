@@ -1127,6 +1127,13 @@ def render_bot_install_success_page(guild_id, permissions):
                 text-align: center;
             }}
             
+            .bot-name {{
+                font-size: 0.875rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-700);
+                text-align: center;
+            }}
+            
             .success-icon {{
                 width: 80px;
                 height: 80px;
@@ -1389,6 +1396,7 @@ def render_bot_install_success_page(guild_id, permissions):
                 .installation-visual {{
                     flex-direction: column;
                     gap: var(--space-4);
+                    margin: 0 var(--space-4) var(--space-6);
                 }}
                 
                 .connection-arrow {{
@@ -1411,7 +1419,10 @@ def render_bot_install_success_page(guild_id, permissions):
             <!-- Success Header -->
             <div class="success-header">
                 <div class="installation-visual">
-                    <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon">
+                    <div class="bot-branding">
+                        <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon">
+                        <span class="bot-name">invitation.rollbot</span>
+                    </div>
                     <div class="connection-arrow">
                         <span class="arrow-text">導入完了</span>
                         <div class="arrow">→</div>
