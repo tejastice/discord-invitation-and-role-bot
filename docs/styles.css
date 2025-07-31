@@ -651,7 +651,7 @@ body {
   transform: translateX(-50%);
   background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
   color: var(--white);
-  padding: var(--space-1) var(--space-4);
+  padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
   font-weight: var(--font-weight-semibold);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
@@ -1371,32 +1371,83 @@ body {
   }
   
   .pricing-table {
-    margin: 0 var(--space-4);
+    margin: 0 var(--space-2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
   }
   
   .pricing-row {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: 0.7fr 1fr 1fr;
   }
   
   .pricing-cell {
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--gray-200);
+    border-right: 1px solid var(--gray-200);
+    background: var(--white);
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+  
+  .pricing-cell:last-child {
     border-right: none;
-    text-align: left;
   }
   
-  .pricing-header-row {
-    display: none;
+  .pricing-row:last-child .pricing-cell {
+    border-bottom: none;
   }
   
-  .pricing-row:first-child {
-    display: block;
-    text-align: center;
-    padding: var(--space-6);
+  .pricing-header-row .pricing-cell {
     background: var(--gray-50);
+    padding: var(--space-8) var(--space-2);
+    font-weight: var(--font-weight-semibold);
+    font-size: 0.8rem;
+  }
+  
+  .plan-header-cell.featured {
+    background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--warm-100) 100%);
   }
   
   .feature-name {
-    font-weight: var(--font-weight-bold);
-    background: var(--gray-100);
+    text-align: left;
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-800);
+    font-size: 0.75rem;
+  }
+  
+  .plan-name {
+    font-size: 0.9rem;
+    margin: var(--space-1) 0;
+  }
+  
+  .plan-price {
+    font-size: 0.8rem;
+  }
+  
+  .price-unit {
+    font-size: 0.6rem;
+  }
+  
+  .pricing-action-row {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr 1fr;
+  }
+  
+  .pricing-action-row .pricing-cell {
+    padding: var(--space-3) var(--space-2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  
+  .btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.75rem;
   }
   
   .timeline-item {
@@ -1458,6 +1509,33 @@ body {
   .tech-specs,
   .contribution-info {
     padding: var(--space-6);
+  }
+  
+  .pricing-table {
+    margin: 0 var(--space-1);
+  }
+  
+  .pricing-cell {
+    padding: var(--space-1);
+    font-size: 0.6rem;
+  }
+  
+  .pricing-header-row .pricing-cell {
+    padding: var(--space-6) var(--space-1);
+    font-size: 0.7rem;
+  }
+  
+  .plan-name {
+    font-size: 0.8rem;
+  }
+  
+  .plan-price {
+    font-size: 0.7rem;
+  }
+  
+  .btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.6rem;
   }
 }
 
