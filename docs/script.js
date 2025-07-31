@@ -119,7 +119,7 @@ function initMobileNavigation() {
             display: none;
             background: none;
             border: none;
-            color: white;
+            color: #2c3e50;
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
@@ -162,6 +162,7 @@ function initCopyToClipboard() {
             font-size: 0.8rem;
             opacity: 0;
             transition: opacity 0.3s ease;
+            box-shadow: 0 2px 4px rgba(88, 101, 242, 0.2);
         `;
         
         pre.style.position = 'relative';
@@ -288,8 +289,8 @@ function addDynamicStyles() {
     const styles = `
         .animate-ready {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         
         .animate-in {
@@ -298,8 +299,8 @@ function addDynamicStyles() {
         }
         
         .nav-links a.active {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
+            color: #5865F2;
+            background: #f8f9fa;
             border-radius: 4px;
             padding: 0.5rem 1rem;
         }
@@ -311,9 +312,10 @@ function addDynamicStyles() {
             top: 100%;
             left: 0;
             right: 0;
-            background: #5865F2;
+            background: white;
             padding: 1rem;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #e9ecef;
         }
         
         input.error, textarea.error {
@@ -407,6 +409,7 @@ function initAccessibility() {
         border-radius: 4px;
         z-index: 1000;
         transition: top 0.3s;
+        box-shadow: 0 2px 4px rgba(88, 101, 242, 0.3);
     `;
     
     skipLink.addEventListener('focus', function() {

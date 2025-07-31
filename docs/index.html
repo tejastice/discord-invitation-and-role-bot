@@ -3,220 +3,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Role Invitation Bot</title>
+    <title>Discord Invitation and Role Bot - プロフェッショナルなサーバー管理ソリューション</title>
+    <meta name="description" content="Discord サーバー管理者向けの包括的なロール付き招待システム。効率的で信頼性の高いメンバー管理を実現。">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/favicon.png">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <h1 class="logo">Discord Role Bot</h1>
-                <ul class="nav-links">
-                    <li><a href="#features">機能</a></li>
-                    <li><a href="#setup">セットアップ</a></li>
-                    <li><a href="privacy.html">プライバシーポリシー</a></li>
-                    <li><a href="terms.html">利用規約</a></li>
-                </ul>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main" class="skip-link">メインコンテンツにスキップ</a>
+
+    <!-- Header with Global Navigation -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand">
+                <h1 class="brand-title">Discord Invitation & Role Bot</h1>
+                <p class="brand-subtitle">Professional Server Management</p>
             </div>
-        </nav>
+            <nav class="primary-nav" aria-label="メインナビゲーション">
+                <ul class="nav-menu">
+                    <li><a href="#overview" class="nav-link">概要</a></li>
+                    <li><a href="#features" class="nav-link">機能</a></li>
+                    <li><a href="#pricing" class="nav-link">プラン</a></li>
+                    <li><a href="#commands" class="nav-link">コマンド</a></li>
+                    <li><a href="#setup" class="nav-link">導入手順</a></li>
+                    <li><a href="#technical" class="nav-link">技術情報</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot" 
+                       class="btn btn-primary" target="_blank" rel="noopener">
+                        Botを導入する
+                    </a>
+                </div>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="メニューを開く">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h2>Discord サーバーのロール管理を簡単に</h2>
-                <p>招待リンクから自動でロールを付与するDiscord Botシステム</p>
-                <div class="hero-buttons">
-                    <a href="#setup" class="btn btn-primary">セットアップ方法</a>
-                    <a href="https://github.com/tejastice/invite-and-role-bot" class="btn btn-secondary" target="_blank">GitHub</a>
+    <!-- Main Content -->
+    <main id="main" class="main-content">
+        
+        <!-- Hero Section with Custom Header Image -->
+        <section class="hero-section" id="overview">
+            <div class="hero-image-container">
+                <img src="images/header-image.jpg" alt="Discord Invitation and Role Bot" class="hero-header-image">
+            </div>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="badge-text">シンプル</span>
+                        <span class="badge-divider">•</span>
+                        <span class="badge-text">オープンソース</span>
+                    </div>
+                    <h2 class="hero-title">Transform Your Discord Server</h2>
+                    <p class="hero-description">
+                        シンプルな招待システムで、Discord サーバー管理を効率化。<br>
+                        ユーザーがサーバーに参加すると同時に自動でロールを付与する、分かりやすい単一機能Bot。
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">ステップで導入</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1</div>
+                            <div class="stat-label">専用機能</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">オープンソース</div>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot" 
+                           class="btn btn-primary btn-large" target="_blank" rel="noopener">
+                            <span class="btn-icon">🚀</span>
+                            Botを導入する
+                        </a>
+                        <a href="#features" class="btn btn-secondary btn-large">
+                            <span class="btn-icon">📋</span>
+                            機能を見る
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="visual-card">
+                        <div class="card-header">
+                            <div class="card-title">招待リンク生成</div>
+                            <div class="card-status">アクティブ</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="command-line">
+                                <span class="command">/generate_invite_link</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item">
+                                    <span class="label">ロール:</span>
+                                    <span class="value">@新規メンバー</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">期限:</span>
+                                    <span class="value">7日間</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="features" class="features">
-            <div class="container">
-                <h2>主な機能</h2>
+        <!-- Features Section with Grid Layout -->
+        <section class="features-section" id="features">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 class="section-title">主要機能</h2>
+                    <p class="section-description">
+                        招待リンクからDiscordサーバーに参加すると、自動的にロールが付与される。それだけ。
+                    </p>
+                </header>
+                
                 <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🔗</div>
-                        <h3>招待リンク生成</h3>
-                        <p>特定のロールが自動で付与される招待リンクを簡単に生成できます</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⏰</div>
-                        <h3>有効期限設定</h3>
-                        <p>招待リンクに有効期限を設定して、セキュリティを保つことができます</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>使用回数制限</h3>
-                        <p>招待リンクの使用回数を制限して、適切な人数管理を行えます</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">👑</div>
-                        <h3>管理者機能</h3>
-                        <p>サーバー管理者は全ての招待リンクを一覧表示・削除できます</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">👤</div>
-                        <h3>個人管理</h3>
-                        <p>ユーザーは自分が作成した招待リンクを管理できます</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌐</div>
-                        <h3>Webインターフェース</h3>
-                        <p>美しいWebページでDiscordサーバーへの参加体験を提供します</p>
-                    </div>
+                    <article class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">自動ロール付与</h3>
+                        <p class="feature-description">
+                            招待リンクからDiscordサーバーに参加した瞬間に、自動で指定したロールが付与されます。
+                        </p>
+                        <ul class="feature-details">
+                            <li>参加と同時に自動実行</li>
+                            <li>手動操作一切不要</li>
+                            <li>確実なロール付与</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                                <path d="M21 12c0 1-1 3-3 3s-3-2-3-3"/>
+                                <path d="M3 12c0 1 1 3 3 3s3-2 3-3"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">ワンステップ生成</h3>
+                        <p class="feature-description">
+                            コマンド一つで「ロール付き招待リンク」を生成。これだけでBotの機能は完了です。
+                        </p>
+                        <ul class="feature-details">
+                            <li>コマンド一つで完結</li>
+                            <li>設定項目なし</li>
+                            <li>即座に使用開始</li>
+                        </ul>
+                    </article>
+
+
+
+
                 </div>
             </div>
         </section>
 
-        <section class="commands">
-            <div class="container">
-                <h2>利用可能なコマンド</h2>
+        <!-- Commands Section -->
+        <section class="commands-section" id="commands">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 class="section-title">スラッシュコマンド（3つだけ）</h2>
+                    <p class="section-description">
+                        ロール付き招待リンクの生成と管理に特化したシンプルなコマンド
+                    </p>
+                </header>
+
                 <div class="commands-grid">
-                    <div class="command-card">
-                        <h3>/generate_invite_link</h3>
-                        <p>ロール招待リンクを生成します（管理者専用）</p>
-                        <ul>
-                            <li>対象ロールの選択</li>
-                            <li>有効期限の設定</li>
-                            <li>使用回数制限の設定</li>
-                        </ul>
-                    </div>
-                    <div class="command-card">
-                        <h3>/list_server_invite_links</h3>
-                        <p>サーバーの全招待リンクを一覧表示・削除（管理者専用）</p>
-                        <ul>
-                            <li>全てのリンクの表示</li>
-                            <li>有効性の確認</li>
-                            <li>一括削除機能</li>
-                        </ul>
-                    </div>
-                    <div class="command-card">
-                        <h3>/list_my_invite_links</h3>
-                        <p>自分が作成した招待リンクを一覧表示・削除</p>
-                        <ul>
-                            <li>個人のリンク管理</li>
-                            <li>使用状況の確認</li>
-                            <li>不要なリンクの削除</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="setup" class="setup">
-            <div class="container">
-                <h2>セットアップ方法</h2>
-                <div class="setup-steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>前提条件</h3>
-                            <ul>
-                                <li>Python 3.8以上</li>
-                                <li>PostgreSQLデータベース</li>
-                                <li>Discord Bot アプリケーション</li>
-                                <li>Discord OAuth2 アプリケーション</li>
+                    <article class="command-item">
+                        <div class="command-header">
+                            <h3 class="command-name">/generate_invite_link</h3>
+                            <span class="command-badge">管理者専用</span>
+                        </div>
+                        <p class="command-description">
+                            ロール招待リンクを生成し、新規メンバーの自動権限付与を設定
+                        </p>
+                        <div class="command-details">
+                            <h4 class="details-title">パラメータ</h4>
+                            <ul class="parameter-list">
+                                <li><code>role</code> - 対象ロールの選択</li>
+                                <li><code>max_uses</code> - 使用回数制限の設定</li>
+                                <li><code>expires_at</code> - 有効期限の設定</li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>リポジトリのクローン</h3>
-                            <pre><code>git clone https://github.com/tejastice/invite-and-role-bot.git
-cd invite-and-role-bot</code></pre>
+                    </article>
+
+                    <article class="command-item">
+                        <div class="command-header">
+                            <h3 class="command-name">/list_server_invite_links</h3>
+                            <span class="command-badge">管理者専用</span>
+                        </div>
+                        <p class="command-description">
+                            サーバーの全招待リンクを一覧表示し、包括的な管理操作を実行
+                        </p>
+                        <div class="command-details">
+                            <h4 class="details-title">機能</h4>
+                            <ul class="parameter-list">
+                                <li>全リンクの統合表示</li>
+                                <li>有効性の即座確認</li>
+                                <li>一括削除・管理機能</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="command-item">
+                        <div class="command-header">
+                            <h3 class="command-name">/list_my_invite_links</h3>
+                            <span class="command-badge">全ユーザー</span>
+                        </div>
+                        <p class="command-description">
+                            個人が作成した招待リンクの一覧表示と個人レベル管理
+                        </p>
+                        <div class="command-details">
+                            <h4 class="details-title">機能</h4>
+                            <ul class="parameter-list">
+                                <li>個人リンクの詳細表示</li>
+                                <li>使用状況の確認</li>
+                                <li>個別削除機能</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Guide Section -->
+        <section class="setup-section" id="setup">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 class="section-title">導入手順</h2>
+                    <p class="section-description">
+                        シンプルな3ステップで自動ロール付与システムを開始
+                    </p>
+                </header>
+
+                <div class="setup-timeline">
+                    <article class="timeline-item">
+                        <div class="timeline-marker">
+                            <span class="step-number">1</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Bot導入</h3>
+                            <p class="timeline-description">
+                                必要な管理権限を付与してBotをサーバーに導入します。
+                                安全な認証プロセスでBotをサーバーに追加。
+                            </p>
+                            <div class="timeline-action">
+                                <a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot" 
+                                   class="btn btn-outline" target="_blank" rel="noopener">
+                                    Botを導入する
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-item">
+                        <div class="timeline-marker">
+                            <span class="step-number">2</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">コマンド実行</h3>
+                            <p class="timeline-description">
+                                <code>/generate_invite_link</code> コマンドでロール付き招待リンクを効率的に作成。
+                                シンプルなパラメータでロール付きリンクを作成。
+                            </p>
+                            <div class="code-example">
+                                <code>/generate_invite_link role:@新規メンバー max_uses:10 expires_at:7d</code>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-item">
+                        <div class="timeline-marker">
+                            <span class="step-number">3</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">リンク配布</h3>
+                            <p class="timeline-description">
+                                生成されたリンクを配布し、新規メンバーの自動的なロール付与システムを活用。
+                                新規メンバーは参加と同時に自動でロールを取得。
+                            </p>
+                            <div class="timeline-features">
+                                <span class="feature-tag">自動ロール付与</span>
+                                <span class="feature-tag">使用状況追跡</span>
+                                <span class="feature-tag">期限管理</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Plans Section -->
+        <section class="pricing-section" id="pricing">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 class="section-title">プラン比較</h2>
+                    <p class="section-description">
+                        フリープランでも十分、プレミアムで制限なし
+                    </p>
+                </header>
+                
+                <div class="pricing-table">
+                    <div class="pricing-row pricing-header-row">
+                        <div class="pricing-cell"></div>
+                        <div class="pricing-cell plan-header-cell">
+                            <h3 class="plan-name">フリープラン</h3>
+                            <div class="plan-price">無料</div>
+                        </div>
+                        <div class="pricing-cell plan-header-cell featured">
+                            <div class="featured-badge">おすすめ</div>
+                            <h3 class="plan-name">プレミアムプラン</h3>
+                            <div class="plan-price">月額 $5 <span class="price-unit">/ ユーザー</span></div>
                         </div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>環境変数の設定</h3>
-                            <p>各フォルダの <code>.env.example</code> を参考に <code>.env</code> ファイルを作成してください。</p>
-                        </div>
+                    
+                    <div class="pricing-row">
+                        <div class="pricing-cell feature-name">自動ロール付与</div>
+                        <div class="pricing-cell"><span class="check">✓</span></div>
+                        <div class="pricing-cell"><span class="check">✓</span></div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3>Discord Botの起動</h3>
-                            <pre><code>cd discord_bot
-pip install -r requirements.txt
-python bot.py</code></pre>
-                        </div>
+                    
+                    <div class="pricing-row">
+                        <div class="pricing-cell feature-name">招待リンク生成</div>
+                        <div class="pricing-cell"><span class="check">✓</span></div>
+                        <div class="pricing-cell"><span class="check">✓</span></div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">5</div>
-                        <div class="step-content">
-                            <h3>Webアプリケーションの起動</h3>
-                            <pre><code>cd get_role
-pip install -r requirements.txt
-python app.py</code></pre>
+                    
+                    <div class="pricing-row">
+                        <div class="pricing-cell feature-name">個人の作成可能リンク数</div>
+                        <div class="pricing-cell">1個まで</div>
+                        <div class="pricing-cell"><strong>無制限</strong></div>
+                    </div>
+                    
+                    <div class="pricing-row">
+                        <div class="pricing-cell feature-name">サーバーあたりの上限</div>
+                        <div class="pricing-cell">1個まで</div>
+                        <div class="pricing-cell"><strong>無制限</strong></div>
+                    </div>
+                    
+                    <div class="pricing-row">
+                        <div class="pricing-cell feature-name">専用サポート</div>
+                        <div class="pricing-cell"><span class="cross">✗</span></div>
+                        <div class="pricing-cell"><span class="check">✓</span></div>
+                    </div>
+                    
+                    <div class="pricing-row pricing-action-row">
+                        <div class="pricing-cell"></div>
+                        <div class="pricing-cell">
+                            <a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot" 
+                               class="btn btn-outline" target="_blank" rel="noopener">
+                                フリーで始める
+                            </a>
+                        </div>
+                        <div class="pricing-cell">
+                            <a href="https://www.patreon.com/c/kei31/membership" class="btn btn-primary" target="_blank" rel="noopener">
+                                プレミアムにする
+                            </a>
+                            <div class="patreon-note">Patreonのサイトに移動します</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="tech-stack">
-            <div class="container">
-                <h2>技術スタック</h2>
-                <div class="tech-grid">
-                    <div class="tech-item">
-                        <h3>Backend</h3>
-                        <ul>
-                            <li>Python 3.8+</li>
-                            <li>Discord.py</li>
-                            <li>Flask</li>
-                            <li>PostgreSQL</li>
-                        </ul>
+        <!-- Technical Information Section -->
+        <section class="technical-section" id="technical">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 class="section-title">技術情報・開発者向け</h2>
+                    <p class="section-description">
+                        オープンソースプロジェクトへの技術的貢献とコミュニティ参加
+                    </p>
+                </header>
+
+                <div class="technical-grid">
+                    <div class="technical-primary">
+                        <article class="github-panel">
+                            <div class="panel-header">
+                                <div class="panel-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                                    </svg>
+                                </div>
+                                <h3 class="panel-title">GitHub Repository</h3>
+                            </div>
+                            <p class="panel-description">
+                                オープンソースで開発しています。興味のある方はぜひご覧ください。
+                            </p>
+                            <div class="panel-action">
+                                <a href="https://github.com/tejastice/invite-and-role-bot" 
+                                   class="btn btn-github" target="_blank" rel="noopener">
+                                    <span class="btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                        </svg>
+                                    </span>
+                                    View on GitHub
+                                </a>
+                            </div>
+                        </article>
                     </div>
-                    <div class="tech-item">
-                        <h3>Frontend</h3>
-                        <ul>
-                            <li>HTML5</li>
-                            <li>CSS3</li>
-                            <li>JavaScript</li>
-                            <li>レスポンシブデザイン</li>
-                        </ul>
-                    </div>
-                    <div class="tech-item">
-                        <h3>Deploy</h3>
-                        <ul>
-                            <li>Railway</li>
-                            <li>Heroku</li>
-                            <li>VPS</li>
-                            <li>Docker対応</li>
-                        </ul>
+
+                    <div class="technical-secondary">
+                        <article class="tech-specs">
+                            <h3 class="specs-title">技術仕様</h3>
+                            <div class="specs-grid">
+                                <div class="spec-item">
+                                    <div class="spec-label">バックエンド</div>
+                                    <div class="spec-value">Python 3.8+ / Discord.py</div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">Webフレームワーク</div>
+                                    <div class="spec-value">Flask</div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">データベース</div>
+                                    <div class="spec-value">PostgreSQL</div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">認証システム</div>
+                                    <div class="spec-value">OAuth2</div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">フロントエンド</div>
+                                    <div class="spec-value">HTML5 / CSS3 / ES6+</div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">デザイン</div>
+                                    <div class="spec-value">レスポンシブ / アクセシブル</div>
+                                </div>
+                            </div>
+                        </article>
+
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
-    <footer>
-        <div class="container">
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Discord Role Bot</h3>
-                    <p>Discord サーバーの管理を簡単にするオープンソースプロジェクト</p>
+                <div class="footer-brand">
+                    <h3 class="footer-title">Discord Invitation & Role Bot</h3>
+                    <p class="footer-description">
+                        プロフェッショナルなDiscordサーバー管理を実現するオープンソースプロジェクト
+                    </p>
                 </div>
-                <div class="footer-section">
-                    <h3>リンク</h3>
-                    <ul>
-                        <li><a href="https://github.com/tejastice/invite-and-role-bot" target="_blank">GitHub</a></li>
-                        <li><a href="privacy.html">プライバシーポリシー</a></li>
-                        <li><a href="terms.html">利用規約</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>お問い合わせ</h3>
-                    <p>GitHubのIssuesでお気軽にご相談ください</p>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4 class="link-title">Get Started</h4>
+                        <ul class="link-list">
+                            <li><a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot" target="_blank" rel="noopener">Add to Server</a></li>
+                            <li><a href="https://github.com/tejastice/invite-and-role-bot" target="_blank" rel="noopener">GitHub</a></li>
+                            <li><a href="#setup">Setup Guide</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4 class="link-title">Legal</h4>
+                        <ul class="link-list">
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4 class="link-title">Support</h4>
+                        <ul class="link-list">
+                            <li><a href="https://github.com/tejastice/invite-and-role-bot/issues" target="_blank" rel="noopener">Report Issues</a></li>
+                            <li><a href="https://github.com/tejastice/invite-and-role-bot/discussions" target="_blank" rel="noopener">Community</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+            
             <div class="footer-bottom">
-                <p>&copy; 2025 Discord Role Bot. Created with Claude Code.</p>
+                <p class="copyright">
+                    &copy; 2025 Discord Invitation & Role Bot. Created with Claude Code.
+                </p>
+                <div class="footer-meta">
+                    <span class="meta-item">オープンソース</span>
+                    <span class="meta-divider">•</span>
+                    <span class="meta-item">MIT License</span>
+                </div>
             </div>
         </div>
     </footer>
