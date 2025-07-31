@@ -1030,6 +1030,81 @@ def render_bot_install_success_page(guild_id, permissions):
                 margin-bottom: var(--space-8);
             }}
             
+            .installation-visual {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-6);
+                margin-bottom: var(--space-8);
+                padding: var(--space-6);
+                background: linear-gradient(135deg, var(--warm-50) 0%, var(--success-light) 100%);
+                border-radius: var(--radius-xl);
+                border: 2px solid var(--success);
+                box-shadow: var(--shadow-lg);
+            }}
+            
+            .installation-bot-icon {{
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                box-shadow: var(--shadow-lg);
+                border: 3px solid var(--primary-pink);
+            }}
+            
+            .connection-arrow {{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: var(--space-2);
+            }}
+            
+            .arrow-text {{
+                font-size: 0.75rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--success-dark);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }}
+            
+            .arrow {{
+                font-size: 1.5rem;
+                color: var(--primary-pink);
+                font-weight: bold;
+                animation: pulse 2s infinite;
+            }}
+            
+            @keyframes pulse {{
+                0%, 100% {{ opacity: 1; transform: scale(1); }}
+                50% {{ opacity: 0.7; transform: scale(1.1); }}
+            }}
+            
+            .server-placeholder {{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: var(--space-2);
+            }}
+            
+            .server-icon-placeholder {{
+                width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, var(--secondary-purple) 0%, var(--primary-orange) 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                box-shadow: var(--shadow-lg);
+                border: 3px solid var(--primary-orange);
+            }}
+            
+            .server-text {{
+                font-size: 0.875rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-700);
+                text-align: center;
+            }}
+            
             .success-icon {{
                 width: 80px;
                 height: 80px;
@@ -1183,6 +1258,33 @@ def render_bot_install_success_page(guild_id, permissions):
                 margin-bottom: 0;
             }}
             
+            .additional-info {{
+                background: var(--warm-50);
+                border-radius: var(--radius-lg);
+                padding: var(--space-6);
+                margin-bottom: var(--space-8);
+                border: 1px solid var(--primary-orange);
+                box-shadow: var(--shadow-md);
+                text-align: center;
+            }}
+            
+            .info-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--primary-orange);
+                margin-bottom: var(--space-3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-2);
+            }}
+            
+            .additional-info p {{
+                color: var(--gray-700);
+                margin: 0;
+                line-height: 1.6;
+            }}
+            
             .support-section {{
                 background: linear-gradient(135deg, var(--warm-50) 0%, var(--primary-pink-light) 20%, var(--primary-orange-light) 100%);
                 padding: var(--space-6);
@@ -1262,6 +1364,19 @@ def render_bot_install_success_page(guild_id, permissions):
                     gap: var(--space-2);
                 }}
                 
+                .installation-visual {{
+                    flex-direction: column;
+                    gap: var(--space-4);
+                }}
+                
+                .connection-arrow {{
+                    transform: rotate(90deg);
+                }}
+                
+                .arrow {{
+                    font-size: 1.25rem;
+                }}
+                
                 .bot-branding {{
                     flex-direction: column;
                     text-align: center;
@@ -1273,7 +1388,17 @@ def render_bot_install_success_page(guild_id, permissions):
         <div class="container">
             <!-- Success Header -->
             <div class="success-header">
-                <div class="success-icon">🎉</div>
+                <div class="installation-visual">
+                    <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon">
+                    <div class="connection-arrow">
+                        <span class="arrow-text">導入完了</span>
+                        <div class="arrow">→</div>
+                    </div>
+                    <div class="server-placeholder">
+                        <div class="server-icon-placeholder">🖥️</div>
+                        <span class="server-text">あなたのサーバー</span>
+                    </div>
+                </div>
                 <h1 class="page-title">Bot導入完了！</h1>
             </div>
             
@@ -1304,29 +1429,15 @@ def render_bot_install_success_page(guild_id, permissions):
                     <div class="command">/list_server_invite_links</div>
                     <div class="command">/list_my_invite_links</div>
                 </div>
-                
-                <div class="step">
-                    <div class="step-header">
-                        <div class="step-number">3</div>
-                        <h3 class="step-title">権限の確認</h3>
-                    </div>
-                    <p class="step-description">Botが正常に動作するために、以下の権限が必要です：</p>
-                    <div class="permissions-list">
-                        <ul>
-                            <li>メンバーを管理</li>
-                            <li>ロールを管理</li>
-                            <li>スラッシュコマンドを使用</li>
-                        </ul>
-                    </div>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="additional-info">
+                <div class="info-title">
+                    <span>📖</span>
+                    使い方の詳細
                 </div>
-                
-                <div class="step">
-                    <div class="step-header">
-                        <div class="step-number">4</div>
-                        <h3 class="step-title">使い方の詳細</h3>
-                    </div>
-                    <p class="step-description">詳細な使い方は<a href="{OFFICIAL_WEBSITE_URL}" class="support-link">公式サイト</a>をご確認ください。</p>
-                </div>
+                <p>より詳しい使い方やFAQについては、<a href="{OFFICIAL_WEBSITE_URL}" class="support-link">公式サイト</a>をご確認ください。</p>
             </div>
             
             <!-- Support Section -->
