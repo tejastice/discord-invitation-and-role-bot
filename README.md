@@ -298,16 +298,6 @@ invite_role_bot/
         └── header-image.jpg
 ```
 
-## 🤝 コントリビューション
-
-プルリクエストやイシューの報告を歓迎します！
-
-1. このリポジトリをフォーク
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'Add amazing feature'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを作成
-
 ## 📞 サポート
 
 - **公式サイト**: https://discord-invitation-and-role-bot.kei31.com/

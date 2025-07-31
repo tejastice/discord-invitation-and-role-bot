@@ -240,8 +240,18 @@ def join_with_link(link_id):
 @app.route('/bot-install')
 def bot_install_callback():
     """Bot招待完了時のcallback"""
+    # エラーチェック（キャンセルされた場合）
+    error = request.args.get('error')
+    if error:
+        app.logger.warning(f"Bot installation failed/cancelled: {error}")
+        return render_bot_install_error_page(error)
+    
     guild_id = request.args.get('guild_id')
     permissions = request.args.get('permissions')
+    
+    if not guild_id:
+        app.logger.error("Bot installation callback missing guild_id")
+        return render_bot_install_error_page("missing_guild_id")
     
     app.logger.info(f"Bot installed to guild {guild_id} with permissions {permissions}")
     
@@ -937,6 +947,171 @@ def render_join_page(guild, role):
                 <div class="notice-text">
                     安全な参加のため、Discordアカウントでの認証が必要です。参加後、指定されたロールが自動で付与されます。
                 </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    '''
+
+def render_bot_install_error_page(error_type):
+    """Bot招待エラーページをレンダリング"""
+    
+    # エラータイプに応じてメッセージを設定
+    if error_type == "access_denied":
+        error_title = "Bot招待がキャンセルされました"
+        error_message = "Botの招待がキャンセルされました。もう一度招待リンクからお試しください。"
+        error_icon = "❌"
+    elif error_type == "missing_guild_id":
+        error_title = "招待情報が不完全です"
+        error_message = "Botの招待処理で必要な情報が不足しています。もう一度招待リンクからお試しください。"
+        error_icon = "⚠️"
+    else:
+        error_title = "招待処理でエラーが発生しました"
+        error_message = f"予期しないエラーが発生しました（{error_type}）。時間をおいて再度お試しください。"
+        error_icon = "❌"
+    
+    return f'''
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bot招待エラー - Discord Invitation & Role Bot</title>
+        <style>
+            :root {{
+                --primary-pink: #F97316;
+                --primary-orange: #FB923C;
+                --secondary-pink: #FED7D7;
+                --gray-50: #F9FAFB;
+                --gray-100: #F3F4F6;
+                --gray-200: #E5E7EB;
+                --gray-700: #374151;
+                --gray-900: #111827;
+                --white: #FFFFFF;
+                --error: #EF4444;
+                --space-2: 0.5rem;
+                --space-3: 0.75rem;
+                --space-4: 1rem;
+                --space-6: 1.5rem;
+                --space-8: 2rem;
+                --radius-lg: 0.5rem;
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                --font-weight-semibold: 600;
+                --transition-fast: 0.15s ease-in-out;
+            }}
+            
+            * {{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }}
+            
+            body {{
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                background: linear-gradient(135deg, var(--gray-50) 0%, var(--secondary-pink) 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: var(--space-4);
+            }}
+            
+            .container {{
+                background: var(--white);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-lg);
+                padding: var(--space-8);
+                max-width: 600px;
+                width: 100%;
+                text-align: center;
+            }}
+            
+            .error-icon {{
+                font-size: 4rem;
+                margin-bottom: var(--space-4);
+            }}
+            
+            .error-title {{
+                font-size: 1.5rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+            }}
+            
+            .error-message {{
+                color: var(--gray-700);
+                margin-bottom: var(--space-6);
+                line-height: 1.6;
+            }}
+            
+            .action-buttons {{
+                display: flex;
+                gap: var(--space-3);
+                justify-content: center;
+                flex-wrap: wrap;
+            }}
+            
+            .btn {{
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: var(--space-3) var(--space-6);
+                border-radius: var(--radius-lg);
+                text-decoration: none;
+                font-weight: var(--font-weight-semibold);
+                transition: all var(--transition-fast);
+                border: none;
+                cursor: pointer;
+            }}
+            
+            .btn-primary {{
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                color: var(--white);
+            }}
+            
+            .btn-primary:hover {{
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-lg);
+            }}
+            
+            .btn-secondary {{
+                background: var(--gray-100);
+                color: var(--gray-700);
+            }}
+            
+            .btn-secondary:hover {{
+                background: var(--gray-200);
+            }}
+            
+            @media (max-width: 768px) {{
+                .container {{
+                    padding: var(--space-6);
+                    margin: var(--space-4);
+                }}
+                
+                .action-buttons {{
+                    flex-direction: column;
+                }}
+                
+                .btn {{
+                    width: 100%;
+                }}
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="error-icon">{error_icon}</div>
+            <h1 class="error-title">{error_title}</h1>
+            <p class="error-message">{error_message}</p>
+            
+            <div class="action-buttons">
+                <a href="{os.getenv('OFFICIAL_WEBSITE_URL', 'https://discord-invitation-and-role-bot.kei31.com')}" class="btn btn-primary">
+                    公式サイトに戻る
+                </a>
+                <a href="{os.getenv('DISCORD_SUPPORT_SERVER_URL', '#')}" class="btn btn-secondary">
+                    サポートに問い合わせ
+                </a>
             </div>
         </div>
     </body>
