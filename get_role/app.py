@@ -7,6 +7,7 @@ import time
 import secrets
 from collections import defaultdict, deque
 from flask import Flask, request, redirect, session
+from urllib.parse import quote
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,7 +22,7 @@ GUILD_ID = int(os.getenv('DISCORD_GUILD_ID', 0))
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 DISCORD_CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
 DISCORD_CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
-REDIRECT_URI = os.getenv('REDIRECT_URI')
+REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:5000/callback')
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
 DEFAULT_TIMEOUT = float(os.getenv("REQ_TIMEOUT", 5))
 
@@ -336,7 +337,7 @@ def render_join_page(guild, role):
     state = secrets.token_urlsafe(16)
     session['oauth_state'] = state
     
-    auth_url = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=identify%20guilds.join&state={state}"
+    auth_url = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={quote(REDIRECT_URI)}&response_type=code&scope=identify%20guilds.join&state={state}"
     
     return f'''
     <!DOCTYPE html>
