@@ -682,7 +682,7 @@ def render_join_page(guild, role):
         <div class="container">
             <!-- Bot Branding -->
             <div class="bot-branding">
-                <img src="https://discord-invitation-and-role.kei31.com/images/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
+                <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
                 <div class="bot-info">
                     <div class="bot-name">Discord Invitation & Role Bot</div>
                     <div class="bot-subtitle">このBotで承認されたリンクです</div>
@@ -704,7 +704,7 @@ def render_join_page(guild, role):
             <!-- Join Button -->
             <a href="{auth_url}" class="join-button">
                 <span>🚀</span>
-                Discordで参加する
+                Discordサーバーに参加する
             </a>
             
             <!-- Security Notice -->
