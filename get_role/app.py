@@ -24,6 +24,7 @@ DISCORD_CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
 DISCORD_CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:5000/callback')
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
+OFFICIAL_WEBSITE_URL = os.getenv('OFFICIAL_WEBSITE_URL', 'https://discord-invitation-and-role.kei31.com')
 DEFAULT_TIMEOUT = float(os.getenv("REQ_TIMEOUT", 5))
 
 # 簡易レート制限（メモリベース）
@@ -73,7 +74,91 @@ async def on_ready():
 
 @app.route('/')
 def home():
-    return '<h1>Discord Role Bot</h1><p>Use /join/&lt;link_id&gt; to join with specific role</p>'
+    """ルートアクセス時は公式ページにリダイレクト"""
+    try:
+        return redirect(OFFICIAL_WEBSITE_URL)
+    except:
+        # リダイレクトが失敗した場合のフォールバックページ
+        return f'''
+        <!DOCTYPE html>
+        <html lang="ja">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Discord Invitation and Role Bot</title>
+            <style>
+                body {{
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    margin: 0;
+                    padding: 40px 20px;
+                    background: linear-gradient(135deg, #E91E63 0%, #FF9800 100%);
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                }}
+                .container {{
+                    text-align: center;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 40px;
+                    border-radius: 20px;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    max-width: 500px;
+                }}
+                h1 {{
+                    font-size: 2.5rem;
+                    margin-bottom: 20px;
+                    font-weight: 700;
+                }}
+                p {{
+                    font-size: 1.2rem;
+                    margin-bottom: 30px;
+                    line-height: 1.6;
+                }}
+                .btn {{
+                    display: inline-block;
+                    background: white;
+                    color: #E91E63;
+                    padding: 15px 30px;
+                    text-decoration: none;
+                    border-radius: 50px;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                }}
+                .btn:hover {{
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+                }}
+                .footer {{
+                    margin-top: 30px;
+                    font-size: 0.9rem;
+                    opacity: 0.8;
+                }}
+            </style>
+            <script>
+                // 3秒後に自動リダイレクト
+                setTimeout(function() {{
+                    window.location.href = '{OFFICIAL_WEBSITE_URL}';
+                }}, 3000);
+            </script>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🤖 Discord Bot</h1>
+                <p>入った瞬間、ロールが手に入る。</p>
+                <p>詳細については公式ページをご覧ください。</p>
+                <a href="{OFFICIAL_WEBSITE_URL}" class="btn">公式ページを見る</a>
+                <div class="footer">
+                    <p>3秒後に自動的にリダイレクトします...</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        '''
 
 #######################
 # Discordにjoinしてロールを付与するためのページを表示する

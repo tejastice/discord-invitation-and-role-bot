@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // フォームバリデーション（今後追加予定）
     initFormValidation();
+    
+    // FAQ アコーディオン
+    initFAQAccordion();
 });
 
 /**
@@ -106,34 +109,42 @@ function initScrollAnimations() {
  * モバイルナビゲーション
  */
 function initMobileNavigation() {
-    // モバイルメニューボタンの作成（必要に応じて）
-    const nav = document.querySelector('nav .nav-container');
-    const navLinks = document.querySelector('.nav-links');
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     
-    if (window.innerWidth <= 768) {
-        // モバイル向けのナビゲーション処理
-        const menuButton = document.createElement('button');
-        menuButton.innerHTML = '☰';
-        menuButton.classList.add('mobile-menu-button');
-        menuButton.style.cssText = `
-            display: none;
-            background: none;
-            border: none;
-            color: #2c3e50;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        `;
-        
-        // モバイル画面でメニューボタンを表示
-        if (window.innerWidth <= 768) {
-            menuButton.style.display = 'block';
-            nav.appendChild(menuButton);
+    if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('mobile-open');
             
-            menuButton.addEventListener('click', function() {
-                navLinks.classList.toggle('mobile-open');
+            // ハンバーガーメニューのアニメーション
+            const spans = mobileMenuToggle.querySelectorAll('span');
+            spans.forEach(span => {
+                span.classList.toggle('active');
             });
-        }
+        });
+        
+        // メニュー項目がクリックされた時にメニューを閉じる
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('mobile-open');
+                const spans = mobileMenuToggle.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.classList.remove('active');
+                });
+            });
+        });
+        
+        // 画面サイズが変更された時の処理
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('mobile-open');
+                const spans = mobileMenuToggle.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.classList.remove('active');
+                });
+            }
+        });
     }
 }
 
@@ -195,6 +206,39 @@ function initCopyToClipboard() {
                 }, 2000);
             }
         });
+    });
+}
+
+/**
+ * FAQ アコーディオン機能
+ */
+function initFAQAccordion() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const toggle = item.querySelector('.faq-toggle');
+        
+        if (question && answer && toggle) {
+            question.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                
+                // 他のFAQアイテムを閉じる
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // 現在のアイテムをトグル
+                if (isActive) {
+                    item.classList.remove('active');
+                } else {
+                    item.classList.add('active');
+                }
+            });
+        }
     });
 }
 
