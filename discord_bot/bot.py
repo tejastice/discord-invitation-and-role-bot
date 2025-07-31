@@ -415,7 +415,7 @@ async def list_server_invite_links(interaction: discord.Interaction):
         
         field_value = (
             f"**リンクID:** `{link['link_id']}`\n"
-            f"**URL:** `{BASE_URL}/join/{link['link_id']}`\n"
+            f"**URL:** {BASE_URL}/join/{link['link_id']}\n"
             f"**使用回数:** {link['current_uses']}/{link['max_uses'] or '無制限'}\n"
             f"**有効期限:** {expires_text}\n"
             f"**作成者:** {creator_name}\n"
@@ -526,7 +526,7 @@ async def list_my_invite_links(interaction: discord.Interaction):
         field_value = (
             f"**サーバー:** {guild_name}\n"
             f"**リンクID:** `{link['link_id']}`\n"
-            f"**URL:** `{BASE_URL}/join/{link['link_id']}`\n"
+            f"**URL:** {BASE_URL}/join/{link['link_id']}\n"
             f"**使用回数:** {link['current_uses']}/{link['max_uses'] or '無制限'}\n"
             f"**有効期限:** {expires_text}\n"
             f"**作成日時:** {link['created_at']}\n"
