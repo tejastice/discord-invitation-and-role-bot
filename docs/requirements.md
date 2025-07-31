@@ -204,7 +204,7 @@ Discord Invitation and Role Bot
 ### 4.1 Bot招待リンク
 **公式Bot招待URL:**
 ```
-https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986688&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot
+https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986689&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot
 ```
 
 **パラメータ詳細:**
