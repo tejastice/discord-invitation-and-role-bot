@@ -444,7 +444,7 @@ function initAccessibility() {
     skipLink.classList.add('skip-link');
     skipLink.style.cssText = `
         position: absolute;
-        top: -40px;
+        top: -60px;
         left: 6px;
         background: #5865F2;
         color: white;

@@ -114,7 +114,7 @@ body {
 /* Skip Link for Accessibility */
 .skip-link {
   position: absolute;
-  top: -100px;
+  top: -150px;
   left: var(--space-4);
   background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
   color: var(--white);
@@ -714,7 +714,7 @@ body {
 
 /* FAQ Section */
 .faq-section {
-  padding: var(--space-24) 0;
+  padding: var(--space-16) 0;
   background: linear-gradient(135deg, var(--warm-50) 0%, var(--gray-100) 100%);
 }
 
