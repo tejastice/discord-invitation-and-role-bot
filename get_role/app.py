@@ -436,88 +436,284 @@ def render_join_page(guild, role):
     
     return f'''
     <!DOCTYPE html>
-    <html>
+    <html lang="ja">
     <head>
-        <title>Discord サーバー参加</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Discordサーバー参加 - Discord Invitation & Role Bot</title>
+        <meta name="description" content="招待リンクからDiscordサーバーに参加してロールを自動取得">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            body {{
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            :root {{
+                --primary-pink: #e91e63;
+                --primary-pink-light: #f48fb1;
+                --primary-pink-dark: #ad1457;
+                --primary-orange: #ff6b35;
+                --primary-orange-light: #ff9068;
+                --secondary-purple: #6366f1;
+                --warm-50: #fefbf3;
+                --gray-50: #f9fafb;
+                --gray-100: #f3f4f6;
+                --gray-200: #e5e7eb;
+                --gray-300: #d1d5db;
+                --gray-400: #9ca3af;
+                --gray-500: #6b7280;
+                --gray-600: #4b5563;
+                --gray-700: #374151;
+                --gray-800: #1f2937;
+                --gray-900: #111827;
+                --white: #ffffff;
+                --success: #22c55e;
+                --warning: #f59e0b;
+                --space-2: 0.5rem;
+                --space-3: 0.75rem;
+                --space-4: 1rem;
+                --space-6: 1.5rem;
+                --space-8: 2rem;
+                --space-12: 3rem;
+                --space-16: 4rem;
+                --radius-md: 0.375rem;
+                --radius-lg: 0.5rem;
+                --radius-xl: 0.75rem;
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --transition-fast: 0.15s ease-out;
+                --font-weight-medium: 500;
+                --font-weight-semibold: 600;
+            }}
+            
+            * {{
+                box-sizing: border-box;
                 margin: 0;
-                padding: 20px;
+                padding: 0;
+            }}
+            
+            body {{
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                line-height: 1.6;
+                color: var(--gray-900);
+                background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--primary-orange-light) 50%, var(--warm-50) 100%);
                 min-height: 100vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                padding: var(--space-4);
             }}
+            
             .container {{
-                background: white;
-                border-radius: 15px;
-                padding: 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                text-align: center;
-                max-width: 400px;
+                background: var(--white);
+                border-radius: var(--radius-xl);
+                padding: var(--space-12);
+                box-shadow: var(--shadow-xl);
+                max-width: 500px;
                 width: 100%;
+                text-align: center;
+                border: 1px solid var(--gray-200);
             }}
-            .guild-icon {{
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                margin: 0 auto 20px auto;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                display: block;
-            }}
-            .guild-icon-fallback {{
-                width: 80px;
-                height: 80px;
-                background: #5865F2;
-                border-radius: 50%;
-                margin: 0 auto 20px auto;
+            
+            .bot-branding {{
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
-                font-size: 32px;
-                font-weight: bold;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                gap: var(--space-3);
+                margin-bottom: var(--space-8);
+                padding: var(--space-4);
+                background: linear-gradient(135deg, var(--gray-50) 0%, var(--warm-50) 100%);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--gray-200);
             }}
-            .guild-name {{
-                font-size: 24px;
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 10px;
+            
+            .bot-icon {{
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                box-shadow: var(--shadow-md);
             }}
+            
+            .bot-info {{
+                text-align: left;
+            }}
+            
+            .bot-name {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-2);
+            }}
+            
+            .bot-subtitle {{
+                font-size: 0.875rem;
+                color: var(--gray-600);
+            }}
+            
+            .server-info {{
+                margin-bottom: var(--space-8);
+            }}
+            
+            .server-icon {{
+                width: 96px;
+                height: 96px;
+                border-radius: 50%;
+                margin: 0 auto var(--space-4) auto;
+                box-shadow: var(--shadow-lg);
+                display: block;
+            }}
+            
+            .server-icon-fallback {{
+                width: 96px;
+                height: 96px;
+                background: linear-gradient(135deg, var(--secondary-purple) 0%, var(--primary-pink) 100%);
+                border-radius: 50%;
+                margin: 0 auto var(--space-4) auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--white);
+                font-size: 2.5rem;
+                font-weight: var(--font-weight-semibold);
+                box-shadow: var(--shadow-lg);
+            }}
+            
+            .server-name {{
+                font-size: 1.875rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-3);
+            }}
+            
+            .role-info {{
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                color: var(--white);
+                padding: var(--space-4);
+                border-radius: var(--radius-lg);
+                margin-bottom: var(--space-8);
+            }}
+            
+            .role-label {{
+                font-size: 0.875rem;
+                font-weight: var(--font-weight-medium);
+                opacity: 0.9;
+                margin-bottom: var(--space-2);
+            }}
+            
             .role-name {{
-                font-size: 18px;
-                color: #666;
-                margin-bottom: 30px;
+                font-size: 1.25rem;
+                font-weight: var(--font-weight-semibold);
             }}
+            
             .join-button {{
-                background: #5865F2;
-                color: white;
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                color: var(--white);
                 border: none;
-                border-radius: 8px;
-                padding: 15px 30px;
-                font-size: 16px;
-                font-weight: bold;
+                border-radius: var(--radius-lg);
+                padding: var(--space-4) var(--space-8);
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
                 cursor: pointer;
                 text-decoration: none;
-                display: inline-block;
-                transition: background 0.3s;
+                display: inline-flex;
+                align-items: center;
+                gap: var(--space-3);
+                transition: all var(--transition-fast);
+                box-shadow: var(--shadow-md);
+                width: 100%;
+                justify-content: center;
             }}
+            
             .join-button:hover {{
-                background: #4752C4;
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                background: linear-gradient(135deg, var(--primary-pink-dark) 0%, var(--primary-orange) 100%);
+            }}
+            
+            .join-button:active {{
+                transform: translateY(0);
+            }}
+            
+            .security-notice {{
+                background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+                border: 1px solid #ffc107;
+                border-radius: var(--radius-md);
+                padding: var(--space-4);
+                margin-top: var(--space-6);
+                display: flex;
+                align-items: flex-start;
+                gap: var(--space-3);
+                text-align: left;
+            }}
+            
+            .notice-icon {{
+                font-size: 1.25rem;
+                flex-shrink: 0;
+                margin-top: 2px;
+            }}
+            
+            .notice-text {{
+                font-size: 0.875rem;
+                line-height: 1.5;
+                color: #856404;
+            }}
+            
+            @media (max-width: 640px) {{
+                .container {{
+                    padding: var(--space-8);
+                    margin: var(--space-4);
+                }}
+                
+                .server-name {{
+                    font-size: 1.5rem;
+                }}
+                
+                .bot-branding {{
+                    flex-direction: column;
+                    text-align: center;
+                }}
+                
+                .bot-info {{
+                    text-align: center;
+                }}
             }}
         </style>
     </head>
     <body>
         <div class="container">
-            {f'<img src="{guild_icon_url}" alt="Server Icon" class="guild-icon">' if guild_icon_url else f'<div class="guild-icon-fallback">{guild.name[0] if guild.name else "?"}</div>'}
-            <div class="guild-name">{guild.name}</div>
-            <div class="role-name">ロール: {role.name}</div>
-            <a href="{auth_url}" class="join-button">Discordで参加する</a>
+            <!-- Bot Branding -->
+            <div class="bot-branding">
+                <img src="https://discord-invitation-and-role.kei31.com/images/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
+                <div class="bot-info">
+                    <div class="bot-name">Discord Invitation & Role Bot</div>
+                    <div class="bot-subtitle">このBotで承認されたリンクです</div>
+                </div>
+            </div>
+            
+            <!-- Server Information -->
+            <div class="server-info">
+                {f'<img src="{guild_icon_url}" alt="Server Icon" class="server-icon">' if guild_icon_url else f'<div class="server-icon-fallback">{guild.name[0] if guild.name else "?"}</div>'}
+                <div class="server-name">{guild.name}</div>
+            </div>
+            
+            <!-- Role Information -->
+            <div class="role-info">
+                <div class="role-label">参加時に自動で獲得できるロール</div>
+                <div class="role-name">🏷️ {role.name}</div>
+            </div>
+            
+            <!-- Join Button -->
+            <a href="{auth_url}" class="join-button">
+                <span>🚀</span>
+                Discordで参加する
+            </a>
+            
+            <!-- Security Notice -->
+            <div class="security-notice">
+                <span class="notice-icon">🔒</span>
+                <div class="notice-text">
+                    安全な参加のため、Discordアカウントでの認証が必要です。参加後、指定されたロールが自動で付与されます。
+                </div>
+            </div>
         </div>
     </body>
     </html>
