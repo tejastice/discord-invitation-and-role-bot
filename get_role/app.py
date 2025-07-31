@@ -25,6 +25,7 @@ DISCORD_CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:5000/callback')
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
 OFFICIAL_WEBSITE_URL = os.getenv('OFFICIAL_WEBSITE_URL', 'https://discord-invitation-and-role.kei31.com')
+DISCORD_SUPPORT_SERVER_URL = os.getenv('DISCORD_SUPPORT_SERVER_URL', 'https://discord.gg/7b5g3RbjYv')
 DEFAULT_TIMEOUT = float(os.getenv("REQ_TIMEOUT", 5))
 
 # 簡易レート制限（メモリベース）
@@ -1324,7 +1325,7 @@ def render_bot_install_success_page(guild_id, permissions):
                         <div class="step-number">4</div>
                         <h3 class="step-title">使い方の詳細</h3>
                     </div>
-                    <p class="step-description">詳細な使い方は<a href="https://discord-invitation-and-role.kei31.com/" class="support-link">公式サイト</a>をご確認ください。</p>
+                    <p class="step-description">詳細な使い方は<a href="{OFFICIAL_WEBSITE_URL}" class="support-link">公式サイト</a>をご確認ください。</p>
                 </div>
             </div>
             
@@ -1334,7 +1335,7 @@ def render_bot_install_success_page(guild_id, permissions):
                     <span>💬</span>
                     サポート
                 </div>
-                問題が発生した場合は、<a href="https://discord.gg/7b5g3RbjYv" target="_blank" class="support-link">Discordサポートサーバー</a>でお気軽にご相談ください。
+                問題が発生した場合は、<a href="{DISCORD_SUPPORT_SERVER_URL}" target="_blank" class="support-link">Discordサポートサーバー</a>でお気軽にご相談ください。
             </div>
             
             <!-- Bot Branding -->
