@@ -945,6 +945,20 @@ def render_join_page(guild, role):
 
 def render_bot_install_success_page(guild_id, permissions):
     """Bot招待成功ページをレンダリング"""
+    # Botからサーバー情報を取得
+    try:
+        from discord_bot.bot import bot
+        guild = bot.get_guild(int(guild_id))
+        if guild:
+            guild_name = guild.name
+            guild_icon_url = guild.icon.url if guild.icon else None
+        else:
+            guild_name = "サーバー"
+            guild_icon_url = None
+    except:
+        guild_name = "サーバー"
+        guild_icon_url = None
+    
     return f'''
     <!DOCTYPE html>
     <html lang="ja">
@@ -1094,6 +1108,14 @@ def render_bot_install_success_page(guild_id, permissions):
                 align-items: center;
                 justify-content: center;
                 font-size: 2rem;
+                box-shadow: var(--shadow-lg);
+                border: 3px solid var(--primary-orange);
+            }}
+            
+            .installation-server-icon {{
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
                 box-shadow: var(--shadow-lg);
                 border: 3px solid var(--primary-orange);
             }}
@@ -1395,8 +1417,8 @@ def render_bot_install_success_page(guild_id, permissions):
                         <div class="arrow">→</div>
                     </div>
                     <div class="server-placeholder">
-                        <div class="server-icon-placeholder">🖥️</div>
-                        <span class="server-text">あなたのサーバー</span>
+                        {f'<img src="{guild_icon_url}" alt="Server Icon" class="installation-server-icon">' if guild_icon_url else '<div class="server-icon-placeholder">🖥️</div>'}
+                        <span class="server-text">{guild_name}</span>
                     </div>
                 </div>
                 <h1 class="page-title">Bot導入完了！</h1>
