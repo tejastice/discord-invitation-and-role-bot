@@ -868,110 +868,299 @@ def render_success_page(username, role_name, is_returning=False):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Role Assignment Success</title>
+        <title>ロール付与完了 - Discord Invitation & Role Bot</title>
+        <meta name="description" content="Discordサーバーへの参加とロール付与が正常に完了しました">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            body {{
+            :root {{
+                --primary-pink: #e91e63;
+                --primary-pink-light: #f48fb1;
+                --primary-pink-dark: #ad1457;
+                --primary-orange: #ff6b35;
+                --primary-orange-light: #ff9068;
+                --secondary-purple: #6366f1;
+                --warm-50: #fefbf3;
+                --gray-50: #f9fafb;
+                --gray-100: #f3f4f6;
+                --gray-200: #e5e7eb;
+                --gray-300: #d1d5db;
+                --gray-400: #9ca3af;
+                --gray-500: #6b7280;
+                --gray-600: #4b5563;
+                --gray-700: #374151;
+                --gray-800: #1f2937;
+                --gray-900: #111827;
+                --white: #ffffff;
+                --success: #22c55e;
+                --success-light: #dcfce7;
+                --success-dark: #166534;
+                --warning: #f59e0b;
+                --space-2: 0.5rem;
+                --space-3: 0.75rem;
+                --space-4: 1rem;
+                --space-6: 1.5rem;
+                --space-8: 2rem;
+                --space-12: 3rem;
+                --space-16: 4rem;
+                --radius-md: 0.375rem;
+                --radius-lg: 0.5rem;
+                --radius-xl: 0.75rem;
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --transition-fast: 0.15s ease-out;
+                --font-weight-medium: 500;
+                --font-weight-semibold: 600;
+            }}
+            
+            * {{
+                box-sizing: border-box;
                 margin: 0;
                 padding: 0;
+            }}
+            
+            body {{
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                line-height: 1.6;
+                color: var(--gray-900);
+                background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--primary-orange-light) 50%, var(--warm-50) 100%);
                 min-height: 100vh;
-                background: #ffffff;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                color: #333;
+                justify-content: center;
+                padding: var(--space-4);
             }}
+            
             .container {{
-                background: #ffffff;
-                border-radius: 12px;
-                padding: 48px 40px;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-                text-align: center;
+                background: var(--white);
+                border-radius: var(--radius-xl);
+                padding: var(--space-12);
+                box-shadow: var(--shadow-xl);
                 max-width: 600px;
-                border: 1px solid #e5e7eb;
+                width: 100%;
+                text-align: center;
+                border: 1px solid var(--gray-200);
             }}
-            h1 {{
-                color: #111827;
-                margin-bottom: 16px;
-                font-size: 28px;
-                font-weight: 600;
-                letter-spacing: -0.025em;
+            
+            .success-header {{
+                margin-bottom: var(--space-8);
             }}
+            
+            .success-icon {{
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, var(--success) 0%, var(--primary-pink) 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto var(--space-6) auto;
+                box-shadow: var(--shadow-lg);
+                font-size: 2.5rem;
+            }}
+            
+            .page-title {{
+                font-size: 2rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }}
+            
+            .welcome-message {{
+                font-size: 1.25rem;
+                color: var(--gray-700);
+                font-weight: var(--font-weight-medium);
+            }}
+            
             .success-info {{
-                background: #f0fdf4;
-                color: #166534;
-                padding: 20px;
-                border-radius: 8px;
-                margin: 24px 0;
-                border: 1px solid #bbf7d0;
+                background: linear-gradient(135deg, var(--success-light) 0%, var(--warm-50) 100%);
+                color: var(--success-dark);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                margin-bottom: var(--space-8);
+                border: 2px solid var(--success);
+                font-weight: var(--font-weight-medium);
+                box-shadow: var(--shadow-md);
             }}
+            
             .role-details {{
-                background: #f9fafb;
-                border-radius: 8px;
-                padding: 24px;
-                margin: 24px 0;
+                background: var(--gray-50);
+                border-radius: var(--radius-lg);
+                padding: var(--space-6);
+                margin-bottom: var(--space-8);
                 text-align: left;
-                border: 1px solid #e5e7eb;
+                border: 1px solid var(--gray-200);
+                box-shadow: var(--shadow-md);
             }}
+            
+            .details-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+                text-align: center;
+            }}
+            
             .detail-row {{
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin: 16px 0;
-                padding: 12px 0;
-                border-bottom: 1px solid #e5e7eb;
+                padding: var(--space-4);
+                margin-bottom: var(--space-2);
+                background: var(--white);
+                border-radius: var(--radius-md);
+                border: 1px solid var(--gray-200);
             }}
+            
             .detail-row:last-child {{
-                border-bottom: none;
+                margin-bottom: 0;
             }}
+            
             .detail-label {{
-                font-weight: 500;
-                color: #374151;
+                font-weight: var(--font-weight-medium);
+                color: var(--gray-600);
+                font-size: 0.875rem;
             }}
+            
             .detail-value {{
-                color: #111827;
-                font-weight: 500;
+                color: var(--gray-900);
+                font-weight: var(--font-weight-semibold);
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }}
-            @media (max-width: 768px) {{
+            
+            .celebration-message {{
+                background: linear-gradient(135deg, var(--warm-50) 0%, var(--primary-pink-light) 20%, var(--primary-orange-light) 100%);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                border: 2px solid var(--primary-pink);
+                box-shadow: var(--shadow-md);
+                color: var(--gray-900);
+                font-weight: var(--font-weight-medium);
+                line-height: 1.7;
+            }}
+            
+            .celebration-title {{
+                font-size: 1.25rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--primary-pink-dark);
+                margin-bottom: var(--space-3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-2);
+            }}
+            
+            .bot-branding {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-3);
+                margin-top: var(--space-8);
+                padding: var(--space-4);
+                background: linear-gradient(135deg, var(--gray-50) 0%, var(--warm-50) 100%);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--gray-200);
+            }}
+            
+            .bot-icon {{
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                box-shadow: var(--shadow-md);
+            }}
+            
+            .bot-text {{
+                font-size: 0.875rem;
+                color: var(--gray-600);
+                font-weight: var(--font-weight-medium);
+            }}
+            
+            @media (max-width: 640px) {{
                 .container {{
-                    margin: 16px;
-                    padding: 32px 24px;
+                    padding: var(--space-8);
+                    margin: var(--space-4);
                 }}
-                h1 {{
-                    font-size: 24px;
+                
+                .page-title {{
+                    font-size: 1.75rem;
                 }}
+                
+                .welcome-message {{
+                    font-size: 1.125rem;
+                }}
+                
                 .detail-row {{
                     flex-direction: column;
                     align-items: flex-start;
-                    gap: 8px;
+                    gap: var(--space-2);
+                }}
+                
+                .detail-value {{
+                    align-self: flex-end;
+                }}
+                
+                .bot-branding {{
+                    flex-direction: column;
+                    text-align: center;
                 }}
             }}
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>{welcome_text}</h1>
-            <div class="success-info">
-                ロール付与が正常に完了しました
+            <!-- Success Header -->
+            <div class="success-header">
+                <div class="success-icon">🎉</div>
+                <h1 class="page-title">参加完了！</h1>
+                <p class="welcome-message">{welcome_text}</p>
             </div>
+            
+            <!-- Success Info -->
+            <div class="success-info">
+                ✅ ロール付与が正常に完了しました
+            </div>
+            
+            <!-- Role Details -->
             <div class="role-details">
+                <h2 class="details-title">📋 詳細情報</h2>
                 <div class="detail-row">
-                    <span class="detail-label">ユーザー名:</span>
+                    <span class="detail-label">👤 ユーザー名</span>
                     <span class="detail-value">{username}</span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">付与されたロール:</span>
+                    <span class="detail-label">🏷️ 付与されたロール</span>
                     <span class="detail-value">{role_name}</span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">ステータス:</span>
+                    <span class="detail-label">📊 ステータス</span>
                     <span class="detail-value">{"参加完了" if not is_returning else "ロール追加完了"}</span>
                 </div>
             </div>
-            <div style="background: #f9fafb; padding: 24px; border-radius: 8px; margin: 24px 0; color: #374151; font-weight: 400; border: 1px solid #e5e7eb;">
-                <strong style="color: #111827;">おめでとうございます！</strong><br>
+            
+            <!-- Celebration Message -->
+            <div class="celebration-message">
+                <div class="celebration-title">
+                    <span>🎊</span>
+                    おめでとうございます！
+                    <span>🎊</span>
+                </div>
                 あなたは{action_text}、<strong>{role_name}</strong>ロールを獲得しました。<br>
-                このページを閉じて、Discordに戻ってください。
+                このページを閉じて、Discordに戻ってお楽しみください。
+            </div>
+            
+            <!-- Bot Branding -->
+            <div class="bot-branding">
+                <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
+                <span class="bot-text">Discord Invitation & Role Bot で処理されました</span>
             </div>
         </div>
     </body>
