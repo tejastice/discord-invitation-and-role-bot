@@ -945,30 +945,34 @@ def render_join_page(guild, role):
 
 def render_bot_install_success_page(guild_id, permissions):
     """Bot招待成功ページをレンダリング"""
-    # Botからサーバー情報を取得
+    # Discord APIを直接呼び出してサーバー情報を取得
     try:
+        import aiohttp
         import asyncio
-        from discord_bot.bot import bot
         
-        app.logger.info(f"Bot instance: {bot}")
-        app.logger.info(f"Bot is ready: {bot.is_ready()}")
-        app.logger.info(f"Bot guilds count: {len(bot.guilds)}")
+        bot_token = os.getenv('DISCORD_TOKEN')
         app.logger.info(f"Trying to get guild: {guild_id}")
         
-        # fetch_guildを直接使用してギルド情報を取得
-        try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            guild = loop.run_until_complete(bot.fetch_guild(int(guild_id)))
-            app.logger.info(f"Guild fetched: {guild}")
-            loop.close()
-        except Exception as fetch_error:
-            app.logger.error(f"Failed to fetch guild: {fetch_error}")
-            guild = None
+        async def fetch_guild_info():
+            headers = {'Authorization': f'Bot {bot_token}'}
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f'https://discord.com/api/v10/guilds/{guild_id}', headers=headers) as resp:
+                    if resp.status == 200:
+                        return await resp.json()
+                    else:
+                        app.logger.error(f"Discord API error: {resp.status}")
+                        return None
         
-        if guild:
-            guild_name = guild.name
-            guild_icon_url = guild.icon.url if guild.icon else None
+        # 非同期関数を実行
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        guild_data = loop.run_until_complete(fetch_guild_info())
+        loop.close()
+        
+        if guild_data:
+            guild_name = guild_data.get('name', 'サーバー')
+            icon_hash = guild_data.get('icon')
+            guild_icon_url = f"https://cdn.discordapp.com/icons/{guild_id}/{icon_hash}.png" if icon_hash else None
             app.logger.info(f"Guild info - Name: {guild_name}, Icon: {guild_icon_url}")
         else:
             guild_name = "サーバー"
