@@ -276,6 +276,13 @@ async def generate_invite_link(interaction: discord.Interaction, role: discord.R
     if expires_display:
         embed.add_field(name="有効期限（日本時間）", value=expires_display, inline=True)
     
+    # セキュリティ注意書きを追加
+    embed.add_field(
+        name="⚠️ 重要な注意事項", 
+        value="**このリンクを知っている人は誰でもサーバーに参加してロールを取得できます。リンクの管理を厳重に行い、信頼できる人にのみ共有してください。**", 
+        inline=False
+    )
+    
     # 生成日時を表示
     embed.set_footer(text=f"生成日時: {created_at_display}")
     

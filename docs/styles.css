@@ -1733,3 +1733,49 @@ button:focus-visible,
     gap: var(--space-2);
   }
 }
+
+/* Security Notice Styles */
+.security-notice {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #ffc107;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.1);
+}
+
+.notice-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notice-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #856404;
+}
+
+.notice-text strong {
+  font-weight: var(--font-weight-semibold);
+  color: #6c5700;
+}
+
+@media (max-width: 768px) {
+  .security-notice {
+    padding: var(--space-3);
+    margin: var(--space-3) 0;
+  }
+  
+  .notice-icon {
+    font-size: 1.125rem;
+  }
+  
+  .notice-text {
+    font-size: 0.8125rem;
+  }
+}
