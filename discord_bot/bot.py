@@ -35,20 +35,6 @@ async def on_ready():
     print(f'{bot.user} がログインしました!')
     print(f'Bot ID: {bot.user.id}')
     
-    # 既存のギルドコマンドをすべて削除
-    print('既存のギルドコマンドを削除中...')
-    deleted_count = 0
-    for guild in bot.guilds:
-        try:
-            bot.tree.clear_commands(guild=guild)
-            await bot.tree.sync(guild=guild)
-            deleted_count += 1
-            print(f'ギルド "{guild.name}" ({guild.id}) のコマンドを削除しました')
-        except Exception as e:
-            print(f'ギルド "{guild.name}" ({guild.id}) のコマンド削除に失敗: {e}')
-    
-    print(f'合計 {deleted_count} 個のギルドからコマンドを削除しました')
-    
     # スラッシュコマンドをグローバルに同期
     try:
         synced = await bot.tree.sync()
