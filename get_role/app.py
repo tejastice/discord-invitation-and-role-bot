@@ -1445,15 +1445,15 @@ def render_bot_install_success_page(guild_id, permissions):
             <div class="success-header">
                 <div class="installation-visual">
                     <div class="bot-branding">
-                        <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon">
-                        <span class="bot-name">invitation.rollbot</span>
+                        <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon"><br>
+                        <span class="bot-name">Invitation & Role Bot</span>
                     </div>
                     <div class="connection-arrow">
                         <span class="arrow-text">導入完了</span>
                         <div class="arrow">→</div>
                     </div>
                     <div class="server-placeholder">
-                        {f'<img src="{guild_icon_url}" alt="Server Icon" class="installation-server-icon">' if guild_icon_url else '<div class="server-icon-placeholder">🖥️</div>'}
+                        {f'<img src="{guild_icon_url}" alt="Server Icon" class="installation-server-icon"><br>' if guild_icon_url else '<div class="server-icon-placeholder">🖥️</div>'}
                         <span class="server-text">{guild_name}</span>
                     </div>
                 </div>
