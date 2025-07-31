@@ -273,18 +273,18 @@ def callback():
     expected_state = session.pop('oauth_state', None)
     if not state or state != expected_state:
         app.logger.warning(f"OAuth state mismatch from {request.remote_addr}")
-        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+        return render_error_page("無効な招待リンクです。", 400)
     
     # link_idを使い捨てにして取得
     link_id = session.pop('link_id', None)
     if not link_id:
         app.logger.warning(f"Invalid/expired link accessed from {request.remote_addr}")
-        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+        return render_error_page("無効な招待リンクです。", 400)
     
     code = request.args.get('code')
     if not code:
         app.logger.warning(f"Authorization failed - no code from {request.remote_addr}")
-        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+        return render_error_page("無効な招待リンクです。", 400)
     
     # Get token
     token_resp = discord_api('POST', 'https://discord.com/api/oauth2/token', data={
@@ -318,7 +318,7 @@ def callback():
     invite_info = get_invite_link_full_info(link_id)
     if not invite_info:
         app.logger.warning(f"Invalid role link_id={link_id} from {request.remote_addr}")
-        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+        return render_error_page("無効な招待リンクです。", 400)
     
     guild_id = invite_info['guild_id']
     role_id = invite_info['role_id']
@@ -329,14 +329,14 @@ def callback():
     # 使用回数が上限に達していないかチェック
     if max_uses and current_uses >= max_uses:
         app.logger.warning(f"Max uses exceeded for link_id={link_id} from {request.remote_addr}")
-        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+        return render_error_page("無効な招待リンクです。", 400)
     
     # 有効期限が切れていないかチェック
     if expires_at_unix:
         now_unix = int(time.time())
         if now_unix > expires_at_unix:
             app.logger.warning(f"Link expired for link_id={link_id} from {request.remote_addr}")
-            return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+            return render_error_page("無効な招待リンクです。", 400)
     
     # ユーザーをサーバーに参加させる
     join_resp = discord_api('PUT', f'https://discord.com/api/v10/guilds/{guild_id}/members/{user_id}',
@@ -628,28 +628,6 @@ def render_error_page(message: str, status: int = 500):
             <!-- Error Message -->
             <div class="error-message">
                 {message}
-            </div>
-            
-            <!-- Help Section -->
-            <div class="help-section">
-                <h2 class="help-title">
-                    <span>💡</span>
-                    対処方法
-                </h2>
-                <ul class="help-list">
-                    <li>ページを再読み込みして再度お試しください</li>
-                    <li>しばらく時間をおいてから再度アクセスしてください</li>
-                    <li>問題が継続する場合は、サポートサーバーまでお問い合わせください</li>
-                </ul>
-            </div>
-            
-            <!-- Retry Section -->
-            <div class="retry-section">
-                <div class="retry-title">
-                    <span>🔄</span>
-                    再試行してください
-                </div>
-                ブラウザの戻るボタンで前のページに戻り、もう一度操作をお試しください。
             </div>
             
             <!-- Bot Branding -->
