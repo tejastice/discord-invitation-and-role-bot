@@ -32,14 +32,11 @@ async def on_ready():
     print(f'{bot.user} がログインしました!')
     print(f'Bot ID: {bot.user.id}')
     
-    # スラッシュコマンドを開発サーバーに同期
+    # スラッシュコマンドをグローバルに同期
     try:
-        if DEV_GUILD_ID:
-            guild = discord.Object(id=DEV_GUILD_ID)
-            synced = await bot.tree.sync(guild=guild)
-            print(f'開発サーバー（ID: {DEV_GUILD_ID}）に {len(synced)} 個のスラッシュコマンドを同期しました')
-        else:
-            print('警告: DISCORD_DEV_GUILD_IDが設定されていないため、スラッシュコマンドを同期できません')
+        synced = await bot.tree.sync()
+        print(f'グローバルに {len(synced)} 個のスラッシュコマンドを同期しました')
+        print('注意: グローバルコマンドの反映には最大1時間かかる場合があります')
     except Exception as e:
         print(f'スラッシュコマンドの同期に失敗しました: {e}')
     
@@ -107,7 +104,7 @@ def parse_expires_at(expires_str: str) -> tuple:
     
     return display_str, unix_timestamp
 
-@bot.tree.command(name="generate_invite_link", description="ロール招待リンクを生成します", guild=discord.Object(id=DEV_GUILD_ID))
+@bot.tree.command(name="generate_invite_link", description="ロール招待リンクを生成します")
 @discord.app_commands.describe(
     role="招待リンクを生成するロール", 
     max_uses="最大使用回数（例：5）", 
@@ -336,7 +333,7 @@ class ConfirmDeleteView(discord.ui.View):
         """削除キャンセルボタンの処理"""
         await interaction.response.edit_message(content="削除をキャンセルしました。", embed=None, view=None)
 
-@bot.tree.command(name="list_server_invite_links", description="サーバーのロール招待リンクの一覧表示と削除", guild=discord.Object(id=DEV_GUILD_ID))
+@bot.tree.command(name="list_server_invite_links", description="サーバーのロール招待リンクの一覧表示と削除")
 async def list_server_invite_links(interaction: discord.Interaction):
     """ロール招待リンクの一覧表示と削除管理"""
     
@@ -459,7 +456,7 @@ async def list_server_invite_links(interaction: discord.Interaction):
 #################
 
 
-@bot.tree.command(name="list_my_invite_links", description="自分が作成した招待リンクの一覧表示と削除", guild=discord.Object(id=DEV_GUILD_ID))
+@bot.tree.command(name="list_my_invite_links", description="自分が作成した招待リンクの一覧表示と削除")
 async def list_my_invite_links(interaction: discord.Interaction):
     """自分が作成した招待リンクの一覧表示と削除管理"""
     
