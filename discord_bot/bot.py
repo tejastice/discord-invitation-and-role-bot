@@ -19,6 +19,9 @@ JST = timezone(timedelta(hours=9))
 TOKEN = os.getenv('DISCORD_TOKEN')
 DEV_GUILD_ID = int(os.getenv('DISCORD_DEV_GUILD_ID', 0))
 BASE_URL = os.getenv('BASE_URL', 'http://localhost:5000')
+PREMIUM_ROLE_ID = int(os.getenv('PREMIUM_ROLE_ID', 0))
+FREE_USER_PERSONAL_LINK_LIMIT = int(os.getenv('FREE_USER_PERSONAL_LINK_LIMIT', 3))
+FREE_USER_SERVER_LINK_LIMIT = int(os.getenv('FREE_USER_SERVER_LINK_LIMIT', 10))
 
 # Intentsの設定
 intents = discord.Intents.default()
@@ -46,10 +49,106 @@ async def on_ready():
 
 
 #######################
+# ユーザーがプレミアムロールを持っているかどうかをチェックする関数
+# - has_premium_role(user: discord.User) -> bool:
+# - この関数は、ユーザーがプレミアムロールを持っているかどうかを確認します。
+# - プレミアムロールIDは環境変数から取得します。
+# - 開発用のギルドIDは環境変数から取得します。
+# - 開発用のギルドでプレミアムロールを持っているかどうかを判別します
+# - ユーザー情報はfetchで取得します。
+#######################
+
+async def has_premium_role(user: discord.User) -> bool:
+    """
+    ユーザーがプレミアムロールを持っているかどうかをチェック
+    
+    Args:
+        user: チェック対象のDiscordユーザー
+        
+    Returns:
+        bool: プレミアムロールを持っている場合True、そうでなければFalse
+    """
+    try:
+        # プレミアムロールIDが設定されていない場合は全員フリーユーザーとして扱う
+        if not PREMIUM_ROLE_ID or not DEV_GUILD_ID:
+            return False
+        
+        # 開発用ギルドを取得
+        guild = bot.get_guild(DEV_GUILD_ID)
+        if not guild:
+            # ギルドが取得できない場合はfetchで試行
+            try:
+                guild = await bot.fetch_guild(DEV_GUILD_ID)
+            except:
+                return False
+        
+        # ユーザーのメンバー情報を取得
+        try:
+            member = await guild.fetch_member(user.id)
+        except:
+            # メンバーが見つからない場合はプレミアムではない
+            return False
+        
+        # プレミアムロールを持っているかチェック
+        premium_role = guild.get_role(PREMIUM_ROLE_ID)
+        if premium_role and premium_role in member.roles:
+            return True
+        
+        return False
+        
+    except Exception as e:
+        print(f"プレミアムロールのチェック中にエラーが発生しました: {e}")
+        return False
+
+async def check_invite_link_limits(user: discord.User, guild_id: int) -> tuple[bool, str]:
+    """
+    招待リンク作成制限をチェック
+    
+    Args:
+        user: チェック対象のDiscordユーザー
+        guild_id: 対象のギルドID
+        
+    Returns:
+        tuple[bool, str]: (制限内かどうか, エラーメッセージ)
+    """
+    try:
+        # プレミアムユーザーは制限なし
+        if await has_premium_role(user):
+            return True, ""
+        
+        # フリーユーザーの制限チェック
+        from shared.models import get_user_invite_links, get_guild_invite_links
+        
+        # 個人の招待リンク数をチェック
+        user_links = get_user_invite_links(user.id)
+        if len(user_links) >= FREE_USER_PERSONAL_LINK_LIMIT:
+            return False, f"フリープランでは個人の招待リンクは最大{FREE_USER_PERSONAL_LINK_LIMIT}個までです。プレミアムプランにアップグレードするか、既存のリンクを削除してください。"
+        
+        # サーバーの招待リンク数をチェック
+        guild_links = get_guild_invite_links(guild_id)
+        if len(guild_links) >= FREE_USER_SERVER_LINK_LIMIT:
+            return False, f"フリープランでは1サーバーあたりの招待リンクは最大{FREE_USER_SERVER_LINK_LIMIT}個までです。プレミアムプランにアップグレードするか、既存のリンクを削除してください。"
+        
+        return True, ""
+        
+    except Exception as e:
+        print(f"招待リンク制限チェック中にエラーが発生しました: {e}")
+        return False, "制限チェック中にエラーが発生しました。"
+
+
+
+
+
+
+#######################
 # 招待コマンドを作るスラッシュコマンド
 # - /generate_invite_link
 # - 引数: role, max_uses(optional), expires_at(optional)
 # - このDiscordの管理権限がある場合に動く
+# - ユーザーがプレミアムロールを持っていた場合、制限なく使える
+# - ユーザーがプレミアムロールを持っていない場合、
+#   - 個人用の招待リンクは最大FREE_USER_PERSONAL_LINK_LIMIT個以上は作成できない
+#   - サーバー用の招待リンクは最大FREE_USER_SERVER_LINK_LIMIT個以上は作成できない
 # - 10桁のランダムな半角小文字の英数字を生成してlink IDとする
 # - これをデータベースに保存する
 # - 生成した招待リンクを返す
@@ -116,6 +215,12 @@ async def generate_invite_link(interaction: discord.Interaction, role: discord.R
     # 管理権限チェック
     if not interaction.user.guild_permissions.manage_guild:
         await interaction.response.send_message("❌ このコマンドを使用するには「サーバー管理」権限が必要です。", ephemeral=True)
+        return
+    
+    # 招待リンク制限チェック
+    can_create, error_message = await check_invite_link_limits(interaction.user, interaction.guild.id)
+    if not can_create:
+        await interaction.response.send_message(f"❌ {error_message}", ephemeral=True)
         return
     
     # 日付文字列をパース
