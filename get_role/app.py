@@ -381,42 +381,262 @@ def render_error_page(message: str, status: int = 500):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error</title>
+        <title>エラー - Discord Invitation & Role Bot</title>
+        <meta name="description" content="処理中にエラーが発生しました">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            body {{
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
+            :root {{
+                --primary-pink: #e91e63;
+                --primary-pink-light: #f48fb1;
+                --primary-pink-dark: #ad1457;
+                --primary-orange: #ff6b35;
+                --primary-orange-light: #ff9068;
+                --secondary-purple: #6366f1;
+                --warm-50: #fefbf3;
+                --gray-50: #f9fafb;
+                --gray-100: #f3f4f6;
+                --gray-200: #e5e7eb;
+                --gray-300: #d1d5db;
+                --gray-400: #9ca3af;
+                --gray-500: #6b7280;
+                --gray-600: #4b5563;
+                --gray-700: #374151;
+                --gray-800: #1f2937;
+                --gray-900: #111827;
+                --white: #ffffff;
+                --error: #dc2626;
+                --error-light: #fee2e2;
+                --error-dark: #991b1b;
+                --warning: #f59e0b;
+                --space-2: 0.5rem;
+                --space-3: 0.75rem;
+                --space-4: 1rem;
+                --space-6: 1.5rem;
+                --space-8: 2rem;
+                --space-12: 3rem;
+                --space-16: 4rem;
+                --radius-md: 0.375rem;
+                --radius-lg: 0.5rem;
+                --radius-xl: 0.75rem;
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --transition-fast: 0.15s ease-out;
+                --font-weight-medium: 500;
+                --font-weight-semibold: 600;
+            }}
+            
+            * {{
+                box-sizing: border-box;
                 margin: 0;
-                background: #f9fafb;
-                color: #374151;
+                padding: 0;
             }}
-            .error-container {{
-                text-align: center;
-                padding: 48px 32px;
-                background: white;
-                border-radius: 12px;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-                max-width: 400px;
-                border: 1px solid #e5e7eb;
-            }}
-            h1 {{
-                color: #dc2626;
-                margin-bottom: 16px;
-                font-size: 24px;
-            }}
-            p {{
+            
+            body {{
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 line-height: 1.6;
-                margin-bottom: 24px;
+                color: var(--gray-900);
+                background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--primary-orange-light) 50%, var(--warm-50) 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: var(--space-4);
+            }}
+            
+            .container {{
+                background: var(--white);
+                border-radius: var(--radius-xl);
+                padding: var(--space-12);
+                box-shadow: var(--shadow-xl);
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                border: 1px solid var(--gray-200);
+            }}
+            
+            .error-header {{
+                margin-bottom: var(--space-8);
+            }}
+            
+            .error-icon {{
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, var(--error) 0%, var(--primary-pink) 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto var(--space-6) auto;
+                box-shadow: var(--shadow-lg);
+                font-size: 2.5rem;
+            }}
+            
+            .page-title {{
+                font-size: 2rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+                background: linear-gradient(135deg, var(--error) 0%, var(--primary-pink) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }}
+            
+            .error-message {{
+                background: linear-gradient(135deg, var(--error-light) 0%, var(--warm-50) 100%);
+                color: var(--error-dark);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                margin-bottom: var(--space-8);
+                border: 2px solid var(--error);
+                font-weight: var(--font-weight-medium);
+                box-shadow: var(--shadow-md);
+                line-height: 1.7;
+            }}
+            
+            .help-section {{
+                background: var(--gray-50);
+                border-radius: var(--radius-lg);
+                padding: var(--space-6);
+                margin-bottom: var(--space-8);
+                border: 1px solid var(--gray-200);
+                box-shadow: var(--shadow-md);
+            }}
+            
+            .help-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-2);
+            }}
+            
+            .help-list {{
+                text-align: left;
+                color: var(--gray-700);
+                font-size: 0.875rem;
+                line-height: 1.6;
+            }}
+            
+            .help-list li {{
+                margin-bottom: var(--space-2);
+                padding-left: var(--space-2);
+            }}
+            
+            .retry-section {{
+                background: linear-gradient(135deg, var(--warm-50) 0%, var(--primary-pink-light) 20%, var(--primary-orange-light) 100%);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                border: 2px solid var(--primary-pink);
+                box-shadow: var(--shadow-md);
+                color: var(--gray-900);
+                font-weight: var(--font-weight-medium);
+                line-height: 1.7;
+                margin-bottom: var(--space-8);
+            }}
+            
+            .retry-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--primary-pink-dark);
+                margin-bottom: var(--space-3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-2);
+            }}
+            
+            .bot-branding {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-3);
+                padding: var(--space-4);
+                background: linear-gradient(135deg, var(--gray-50) 0%, var(--warm-50) 100%);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--gray-200);
+            }}
+            
+            .bot-icon {{
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                box-shadow: var(--shadow-md);
+            }}
+            
+            .bot-text {{
+                font-size: 0.875rem;
+                color: var(--gray-600);
+                font-weight: var(--font-weight-medium);
+            }}
+            
+            @media (max-width: 640px) {{
+                .container {{
+                    padding: var(--space-8);
+                    margin: var(--space-4);
+                }}
+                
+                .page-title {{
+                    font-size: 1.75rem;
+                }}
+                
+                .help-list {{
+                    font-size: 0.8125rem;
+                }}
+                
+                .bot-branding {{
+                    flex-direction: column;
+                    text-align: center;
+                }}
             }}
         </style>
     </head>
     <body>
-        <div class="error-container">
-            <h1>エラー</h1>
-            <p>{message}</p>
+        <div class="container">
+            <!-- Error Header -->
+            <div class="error-header">
+                <div class="error-icon">❌</div>
+                <h1 class="page-title">エラーが発生しました</h1>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message">
+                {message}
+            </div>
+            
+            <!-- Help Section -->
+            <div class="help-section">
+                <h2 class="help-title">
+                    <span>💡</span>
+                    対処方法
+                </h2>
+                <ul class="help-list">
+                    <li>ページを再読み込みして再度お試しください</li>
+                    <li>しばらく時間をおいてから再度アクセスしてください</li>
+                    <li>問題が継続する場合は、サポートサーバーまでお問い合わせください</li>
+                </ul>
+            </div>
+            
+            <!-- Retry Section -->
+            <div class="retry-section">
+                <div class="retry-title">
+                    <span>🔄</span>
+                    再試行してください
+                </div>
+                ブラウザの戻るボタンで前のページに戻り、もう一度操作をお試しください。
+            </div>
+            
+            <!-- Bot Branding -->
+            <div class="bot-branding">
+                <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
+                <span class="bot-text">Discord Invitation & Role Bot</span>
+            </div>
         </div>
     </body>
     </html>
@@ -688,7 +908,7 @@ def render_join_page(guild, role):
                 <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
                 <div class="bot-info">
                     <div class="bot-name">Discord Invitation & Role Bot</div>
-                    <div class="bot-subtitle">このBotで承認されたリンクです</div>
+                    <div class="bot-subtitle">このBotでサーバー参加とロール付与が行われます</div>
                 </div>
             </div>
             
