@@ -469,6 +469,22 @@
                                 Botをサーバーに追加します。
                                 ボタンを押してDiscordで許可するだけです。※サーバー管理権限が必要です。
                             </p>
+                            <div class="role-hierarchy-notice">
+                                <div class="notice-header">
+                                    <span class="notice-icon">⚠️</span>
+                                    <h4 class="notice-title">重要：ロール階層について</h4>
+                                </div>
+                                <p class="notice-text">
+                                    Botが自動でロールを付与するには、<strong>Botのロールが付与したいロールよりも上位</strong>にある必要があります。
+                                    Discordのロール階層でBotより下にあるロールは付与できませんのでご注意ください。
+                                </p>
+                                <div class="role-example-image">
+                                    <img src="images/role.jpg" alt="Discordのロール階層の例" class="role-hierarchy-image">
+                                    <p class="image-caption">
+                                        例：招待&ロールBotより下にある「自動付与するロール」は正常に動作します
+                                    </p>
+                                </div>
+                            </div>
                             <div class="timeline-action">
                                 <a href="https://discord.com/oauth2/authorize?client_id=1399982657424588922&permissions=2415986689&response_type=code&redirect_uri=https%3A%2F%2Finvitation-and-role.kei31.com%2Fbot-install&integration_type=0&scope=identify+guilds.join+bot+applications.commands" 
                                    class="btn btn-outline" target="_blank" rel="noopener">
