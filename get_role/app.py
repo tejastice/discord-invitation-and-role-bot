@@ -585,23 +585,26 @@ def render_join_page(guild, role):
             }}
             
             .role-info {{
-                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
-                color: var(--white);
+                background: var(--white);
+                color: var(--gray-900);
                 padding: var(--space-4);
                 border-radius: var(--radius-lg);
                 margin-bottom: var(--space-8);
+                border: 2px solid var(--primary-pink);
+                box-shadow: var(--shadow-md);
             }}
             
             .role-label {{
                 font-size: 0.875rem;
                 font-weight: var(--font-weight-medium);
-                opacity: 0.9;
+                color: var(--gray-600);
                 margin-bottom: var(--space-2);
             }}
             
             .role-name {{
                 font-size: 1.25rem;
                 font-weight: var(--font-weight-semibold);
+                color: var(--primary-pink);
             }}
             
             .join-button {{
