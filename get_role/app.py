@@ -45,9 +45,18 @@ def discord_api(method, url, **kwargs):
     kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
     try:
         r = requests.request(method, url, **kwargs)
-        return r if r.ok else None
+        if r.ok:
+            return r
+        else:
+            # HTTPエラーの詳細をログに記録
+            try:
+                error_details = r.json()
+                app.logger.error(f"Discord API HTTP {r.status_code} error: {error_details} url={url}")
+            except:
+                app.logger.error(f"Discord API HTTP {r.status_code} error: {r.text} url={url}")
+            return None
     except requests.RequestException as e:
-        app.logger.error(f"Discord API error: {e} url={url}")
+        app.logger.error(f"Discord API connection error: {e} url={url}")
         return None
 
 @app.before_request
