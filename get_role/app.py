@@ -955,20 +955,16 @@ def render_bot_install_success_page(guild_id, permissions):
         app.logger.info(f"Bot guilds count: {len(bot.guilds)}")
         app.logger.info(f"Trying to get guild: {guild_id}")
         
-        guild = bot.get_guild(int(guild_id))
-        app.logger.info(f"Guild from cache: {guild}")
-        
-        if not guild:
-            # キャッシュにない場合はfetchで試す
-            try:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                guild = loop.run_until_complete(bot.fetch_guild(int(guild_id)))
-                app.logger.info(f"Guild fetched: {guild}")
-                loop.close()
-            except Exception as fetch_error:
-                app.logger.error(f"Failed to fetch guild: {fetch_error}")
-                guild = None
+        # fetch_guildを直接使用してギルド情報を取得
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            guild = loop.run_until_complete(bot.fetch_guild(int(guild_id)))
+            app.logger.info(f"Guild fetched: {guild}")
+            loop.close()
+        except Exception as fetch_error:
+            app.logger.error(f"Failed to fetch guild: {fetch_error}")
+            guild = None
         
         if guild:
             guild_name = guild.name
@@ -1121,7 +1117,9 @@ def render_bot_install_success_page(guild_id, permissions):
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                justify-content: center;
                 gap: var(--space-2);
+                text-align: center;
             }}
             
             .server-icon-placeholder {{
@@ -1376,9 +1374,10 @@ def render_bot_install_success_page(guild_id, permissions):
             
             .bot-branding {{
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: var(--space-3);
+                gap: var(--space-2);
                 padding: var(--space-4);
                 background: linear-gradient(135deg, var(--gray-50) 0%, var(--warm-50) 100%);
                 border-radius: var(--radius-lg);
@@ -1445,7 +1444,7 @@ def render_bot_install_success_page(guild_id, permissions):
             <div class="success-header">
                 <div class="installation-visual">
                     <div class="bot-branding">
-                        <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon"><br>
+                        <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="installation-bot-icon">
                         <span class="bot-name">Invitation & Role Bot</span>
                     </div>
                     <div class="connection-arrow">
@@ -1453,7 +1452,7 @@ def render_bot_install_success_page(guild_id, permissions):
                         <div class="arrow">→</div>
                     </div>
                     <div class="server-placeholder">
-                        {f'<img src="{guild_icon_url}" alt="Server Icon" class="installation-server-icon"><br>' if guild_icon_url else '<div class="server-icon-placeholder">🖥️</div>'}
+                        {f'<img src="{guild_icon_url}" alt="Server Icon" class="installation-server-icon">' if guild_icon_url else '<div class="server-icon-placeholder">🖥️</div>'}
                         <span class="server-text">{guild_name}</span>
                     </div>
                 </div>
