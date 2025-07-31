@@ -950,127 +950,397 @@ def render_bot_install_success_page(guild_id, permissions):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bot Installation Success</title>
+        <title>Bot導入完了 - Discord Invitation & Role Bot</title>
+        <meta name="description" content="Discord Invitation & Role Bot の導入が正常に完了しました">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            body {{
+            :root {{
+                --primary-pink: #e91e63;
+                --primary-pink-light: #f48fb1;
+                --primary-pink-dark: #ad1457;
+                --primary-orange: #ff6b35;
+                --primary-orange-light: #ff9068;
+                --secondary-purple: #6366f1;
+                --warm-50: #fefbf3;
+                --gray-50: #f9fafb;
+                --gray-100: #f3f4f6;
+                --gray-200: #e5e7eb;
+                --gray-300: #d1d5db;
+                --gray-400: #9ca3af;
+                --gray-500: #6b7280;
+                --gray-600: #4b5563;
+                --gray-700: #374151;
+                --gray-800: #1f2937;
+                --gray-900: #111827;
+                --white: #ffffff;
+                --success: #22c55e;
+                --success-light: #dcfce7;
+                --success-dark: #166534;
+                --space-2: 0.5rem;
+                --space-3: 0.75rem;
+                --space-4: 1rem;
+                --space-6: 1.5rem;
+                --space-8: 2rem;
+                --space-12: 3rem;
+                --space-16: 4rem;
+                --radius-md: 0.375rem;
+                --radius-lg: 0.5rem;
+                --radius-xl: 0.75rem;
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --transition-fast: 0.15s ease-out;
+                --font-weight-medium: 500;
+                --font-weight-semibold: 600;
+            }}
+            
+            * {{
+                box-sizing: border-box;
                 margin: 0;
                 padding: 0;
+            }}
+            
+            body {{
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                line-height: 1.6;
+                color: var(--gray-900);
+                background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--primary-orange-light) 50%, var(--warm-50) 100%);
                 min-height: 100vh;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                color: #333;
+                justify-content: center;
+                padding: var(--space-4);
             }}
+            
             .container {{
-                background: #ffffff;
-                border-radius: 12px;
-                padding: 48px 40px;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+                background: var(--white);
+                border-radius: var(--radius-xl);
+                padding: var(--space-12);
+                box-shadow: var(--shadow-xl);
+                max-width: 700px;
+                width: 100%;
                 text-align: center;
-                max-width: 600px;
-                border: 1px solid #e5e7eb;
+                border: 1px solid var(--gray-200);
             }}
-            h1 {{
-                color: #111827;
-                margin-bottom: 16px;
-                font-size: 28px;
-                font-weight: 600;
-                letter-spacing: -0.025em;
+            
+            .success-header {{
+                margin-bottom: var(--space-8);
             }}
+            
+            .success-icon {{
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, var(--success) 0%, var(--primary-pink) 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto var(--space-6) auto;
+                box-shadow: var(--shadow-lg);
+                font-size: 2.5rem;
+            }}
+            
+            .page-title {{
+                font-size: 2rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-4);
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }}
+            
             .success-info {{
-                background: #f0fdf4;
-                color: #166534;
-                padding: 20px;
-                border-radius: 8px;
-                margin: 24px 0;
-                border: 1px solid #bbf7d0;
+                background: linear-gradient(135deg, var(--success-light) 0%, var(--warm-50) 100%);
+                color: var(--success-dark);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                margin-bottom: var(--space-8);
+                border: 2px solid var(--success);
+                font-weight: var(--font-weight-medium);
+                box-shadow: var(--shadow-md);
             }}
+            
             .setup-steps {{
-                background: #f9fafb;
-                border-radius: 8px;
-                padding: 24px;
-                margin: 24px 0;
+                background: var(--gray-50);
+                border-radius: var(--radius-lg);
+                padding: var(--space-8);
+                margin-bottom: var(--space-8);
                 text-align: left;
-                border: 1px solid #e5e7eb;
+                border: 1px solid var(--gray-200);
+                box-shadow: var(--shadow-md);
             }}
+            
+            .steps-title {{
+                font-size: 1.5rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+                margin-bottom: var(--space-6);
+                text-align: center;
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }}
+            
             .step {{
-                margin: 16px 0;
-                padding: 12px 0;
+                background: var(--white);
+                border-radius: var(--radius-lg);
+                padding: var(--space-6);
+                margin-bottom: var(--space-4);
+                border: 1px solid var(--gray-200);
+                box-shadow: var(--shadow-md);
+                transition: transform var(--transition-fast);
             }}
-            .step h3 {{
-                color: #374151;
-                margin-bottom: 8px;
-                font-size: 16px;
+            
+            .step:hover {{
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
             }}
-            .step p {{
-                color: #6b7280;
-                margin: 0;
-                line-height: 1.5;
+            
+            .step:last-child {{
+                margin-bottom: 0;
             }}
+            
+            .step-header {{
+                display: flex;
+                align-items: center;
+                gap: var(--space-3);
+                margin-bottom: var(--space-3);
+            }}
+            
+            .step-number {{
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+                color: var(--white);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: var(--font-weight-semibold);
+                font-size: 0.875rem;
+            }}
+            
+            .step-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--gray-900);
+            }}
+            
+            .step-description {{
+                color: var(--gray-700);
+                margin-bottom: var(--space-4);
+                line-height: 1.6;
+            }}
+            
             .command {{
-                background: #f3f4f6;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-family: 'Courier New', monospace;
-                font-size: 14px;
-                color: #374151;
-                margin: 8px 0;
+                background: var(--gray-900);
+                color: var(--white);
+                padding: var(--space-3) var(--space-4);
+                border-radius: var(--radius-md);
+                font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+                font-size: 0.875rem;
+                margin: var(--space-2) 0;
+                display: inline-block;
+                box-shadow: var(--shadow-md);
             }}
-            @media (max-width: 768px) {{
+            
+            .permissions-list {{
+                background: var(--warm-50);
+                border-radius: var(--radius-md);
+                padding: var(--space-4);
+                margin: var(--space-3) 0;
+                border: 1px solid var(--primary-orange);
+            }}
+            
+            .permissions-list ul {{
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }}
+            
+            .permissions-list li {{
+                color: var(--gray-700);
+                margin-bottom: var(--space-2);
+                padding-left: var(--space-6);
+                position: relative;
+            }}
+            
+            .permissions-list li:before {{
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: var(--success);
+                font-weight: var(--font-weight-semibold);
+            }}
+            
+            .permissions-list li:last-child {{
+                margin-bottom: 0;
+            }}
+            
+            .support-section {{
+                background: linear-gradient(135deg, var(--warm-50) 0%, var(--primary-pink-light) 20%, var(--primary-orange-light) 100%);
+                padding: var(--space-6);
+                border-radius: var(--radius-lg);
+                border: 2px solid var(--primary-pink);
+                box-shadow: var(--shadow-md);
+                color: var(--gray-900);
+                font-weight: var(--font-weight-medium);
+                line-height: 1.7;
+                margin-bottom: var(--space-8);
+            }}
+            
+            .support-title {{
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                color: var(--primary-pink-dark);
+                margin-bottom: var(--space-3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-2);
+            }}
+            
+            .support-link {{
+                color: var(--primary-pink);
+                text-decoration: none;
+                font-weight: var(--font-weight-semibold);
+                transition: color var(--transition-fast);
+            }}
+            
+            .support-link:hover {{
+                color: var(--primary-pink-dark);
+                text-decoration: underline;
+            }}
+            
+            .bot-branding {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-3);
+                padding: var(--space-4);
+                background: linear-gradient(135deg, var(--gray-50) 0%, var(--warm-50) 100%);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--gray-200);
+            }}
+            
+            .bot-icon {{
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                box-shadow: var(--shadow-md);
+            }}
+            
+            .bot-text {{
+                font-size: 0.875rem;
+                color: var(--gray-600);
+                font-weight: var(--font-weight-medium);
+            }}
+            
+            @media (max-width: 640px) {{
                 .container {{
-                    margin: 16px;
-                    padding: 32px 24px;
+                    padding: var(--space-8);
+                    margin: var(--space-4);
                 }}
-                h1 {{
-                    font-size: 24px;
+                
+                .page-title {{
+                    font-size: 1.75rem;
+                }}
+                
+                .step {{
+                    padding: var(--space-4);
+                }}
+                
+                .step-header {{
+                    flex-direction: column;
+                    text-align: center;
+                    gap: var(--space-2);
+                }}
+                
+                .bot-branding {{
+                    flex-direction: column;
+                    text-align: center;
                 }}
             }}
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>🎉 Bot導入完了！</h1>
-            <div class="success-info">
-                Discord Role Botがサーバーに正常に追加されました
+            <!-- Success Header -->
+            <div class="success-header">
+                <div class="success-icon">🎉</div>
+                <h1 class="page-title">Bot導入完了！</h1>
             </div>
             
+            <!-- Success Info -->
+            <div class="success-info">
+                ✅ Discord Invitation & Role Bot がサーバーに正常に追加されました
+            </div>
+            
+            <!-- Setup Steps -->
             <div class="setup-steps">
-                <h2 style="color: #111827; margin-bottom: 20px; font-size: 20px;">次のステップ</h2>
+                <h2 class="steps-title">🚀 次のステップ</h2>
                 
                 <div class="step">
-                    <h3>1. スラッシュコマンドを使用</h3>
-                    <p>以下のコマンドでロール招待リンクを作成できます：</p>
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">スラッシュコマンドを使用</h3>
+                    </div>
+                    <p class="step-description">以下のコマンドでロール招待リンクを作成できます：</p>
                     <div class="command">/generate_invite_link</div>
                 </div>
                 
                 <div class="step">
-                    <h3>2. 招待リンクの管理</h3>
-                    <p>作成したリンクの確認・削除：</p>
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">招待リンクの管理</h3>
+                    </div>
+                    <p class="step-description">作成したリンクの確認・削除：</p>
                     <div class="command">/list_server_invite_links</div>
                     <div class="command">/list_my_invite_links</div>
                 </div>
                 
                 <div class="step">
-                    <h3>3. 権限の確認</h3>
-                    <p>Botが正常に動作するために、以下の権限が必要です：</p>
-                    <ul style="margin: 8px 0; padding-left: 20px; color: #6b7280;">
-                        <li>メンバーを管理</li>
-                        <li>ロールを管理</li>
-                        <li>スラッシュコマンドを使用</li>
-                    </ul>
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">権限の確認</h3>
+                    </div>
+                    <p class="step-description">Botが正常に動作するために、以下の権限が必要です：</p>
+                    <div class="permissions-list">
+                        <ul>
+                            <li>メンバーを管理</li>
+                            <li>ロールを管理</li>
+                            <li>スラッシュコマンドを使用</li>
+                        </ul>
+                    </div>
                 </div>
                 
                 <div class="step">
-                    <h3>4. 使い方</h3>
-                    <p>詳細な使い方は<a href="/docs/" style="color: #5865F2;">ドキュメント</a>をご確認ください。</p>
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">使い方の詳細</h3>
+                    </div>
+                    <p class="step-description">詳細な使い方は<a href="https://discord-invitation-and-role.kei31.com/" class="support-link">公式サイト</a>をご確認ください。</p>
                 </div>
             </div>
             
-            <div style="background: #f9fafb; padding: 24px; border-radius: 8px; margin: 24px 0; color: #374151; font-weight: 400; border: 1px solid #e5e7eb;">
-                <strong style="color: #111827;">サポート</strong><br>
-                問題が発生した場合は、<a href="https://github.com/tejastice/invite-and-role-bot/issues" target="_blank" style="color: #5865F2;">GitHub Issues</a>でお気軽にご相談ください。
+            <!-- Support Section -->
+            <div class="support-section">
+                <div class="support-title">
+                    <span>💬</span>
+                    サポート
+                </div>
+                問題が発生した場合は、<a href="https://discord.gg/7b5g3RbjYv" target="_blank" class="support-link">Discordサポートサーバー</a>でお気軽にご相談ください。
+            </div>
+            
+            <!-- Bot Branding -->
+            <div class="bot-branding">
+                <img src="/static/bot-icon.jpeg" alt="Discord Invitation & Role Bot" class="bot-icon">
+                <span class="bot-text">Discord Invitation & Role Bot</span>
             </div>
         </div>
     </body>
