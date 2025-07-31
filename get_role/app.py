@@ -151,6 +151,16 @@ def join_with_link(link_id):
 # - 参加に失敗した場合は、エラーメッセージを表示
 #######################
 
+@app.route('/bot-install')
+def bot_install_callback():
+    """Bot招待完了時のcallback"""
+    guild_id = request.args.get('guild_id')
+    permissions = request.args.get('permissions')
+    
+    app.logger.info(f"Bot installed to guild {guild_id} with permissions {permissions}")
+    
+    return render_bot_install_success_page(guild_id, permissions)
+
 @app.route('/callback')
 def callback():
     # OAuth CSRF対策: stateパラメータ検証
@@ -423,6 +433,141 @@ def render_join_page(guild, role):
             <div class="guild-name">{guild.name}</div>
             <div class="role-name">ロール: {role.name}</div>
             <a href="{auth_url}" class="join-button">Discordで参加する</a>
+        </div>
+    </body>
+    </html>
+    '''
+
+def render_bot_install_success_page(guild_id, permissions):
+    """Bot招待成功ページをレンダリング"""
+    return f'''
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bot Installation Success</title>
+        <style>
+            body {{
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #333;
+            }}
+            .container {{
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 48px 40px;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+                text-align: center;
+                max-width: 600px;
+                border: 1px solid #e5e7eb;
+            }}
+            h1 {{
+                color: #111827;
+                margin-bottom: 16px;
+                font-size: 28px;
+                font-weight: 600;
+                letter-spacing: -0.025em;
+            }}
+            .success-info {{
+                background: #f0fdf4;
+                color: #166534;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 24px 0;
+                border: 1px solid #bbf7d0;
+            }}
+            .setup-steps {{
+                background: #f9fafb;
+                border-radius: 8px;
+                padding: 24px;
+                margin: 24px 0;
+                text-align: left;
+                border: 1px solid #e5e7eb;
+            }}
+            .step {{
+                margin: 16px 0;
+                padding: 12px 0;
+            }}
+            .step h3 {{
+                color: #374151;
+                margin-bottom: 8px;
+                font-size: 16px;
+            }}
+            .step p {{
+                color: #6b7280;
+                margin: 0;
+                line-height: 1.5;
+            }}
+            .command {{
+                background: #f3f4f6;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                color: #374151;
+                margin: 8px 0;
+            }}
+            @media (max-width: 768px) {{
+                .container {{
+                    margin: 16px;
+                    padding: 32px 24px;
+                }}
+                h1 {{
+                    font-size: 24px;
+                }}
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🎉 Bot導入完了！</h1>
+            <div class="success-info">
+                Discord Role Botがサーバーに正常に追加されました
+            </div>
+            
+            <div class="setup-steps">
+                <h2 style="color: #111827; margin-bottom: 20px; font-size: 20px;">次のステップ</h2>
+                
+                <div class="step">
+                    <h3>1. スラッシュコマンドを使用</h3>
+                    <p>以下のコマンドでロール招待リンクを作成できます：</p>
+                    <div class="command">/generate_invite_link</div>
+                </div>
+                
+                <div class="step">
+                    <h3>2. 招待リンクの管理</h3>
+                    <p>作成したリンクの確認・削除：</p>
+                    <div class="command">/list_server_invite_links</div>
+                    <div class="command">/list_my_invite_links</div>
+                </div>
+                
+                <div class="step">
+                    <h3>3. 権限の確認</h3>
+                    <p>Botが正常に動作するために、以下の権限が必要です：</p>
+                    <ul style="margin: 8px 0; padding-left: 20px; color: #6b7280;">
+                        <li>メンバーを管理</li>
+                        <li>ロールを管理</li>
+                        <li>スラッシュコマンドを使用</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h3>4. 使い方</h3>
+                    <p>詳細な使い方は<a href="/docs/" style="color: #5865F2;">ドキュメント</a>をご確認ください。</p>
+                </div>
+            </div>
+            
+            <div style="background: #f9fafb; padding: 24px; border-radius: 8px; margin: 24px 0; color: #374151; font-weight: 400; border: 1px solid #e5e7eb;">
+                <strong style="color: #111827;">サポート</strong><br>
+                問題が発生した場合は、<a href="https://github.com/tejastice/invite-and-role-bot/issues" target="_blank" style="color: #5865F2;">GitHub Issues</a>でお気軽にご相談ください。
+            </div>
         </div>
     </body>
     </html>
