@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 同じディレクトリのsharedモジュールをインポート
-from shared.models import get_role_id_by_link_id, get_invite_link_full_info
+from shared.models import get_role_id_by_link_id, get_invite_link_full_info, increment_invite_link_usage
 
 # 環境変数から設定を読み込み
 GUILD_ID = int(os.getenv('DISCORD_GUILD_ID', 0))
@@ -129,6 +129,27 @@ def join_with_link(link_id):
     return render_join_page(guild, role)
 
 
+
+#######################
+# callbackエンドポイント
+# - OAuth認証のコールバックを処理
+# - stateパラメータを検証してCSRF対策
+# - リンクIDをセッションから取得
+# - 認証コードを取得
+# - アクセストークンを取得
+# - ユーザー情報を取得
+# - link_idからrole_idとその他の情報を取得
+# - 使用回数が上限に達していないかチェック
+# - 有効期限が切れていないかチェック
+# - 何か一つでも引っかかった場合はエラーとする
+# - ユーザーをサーバーに参加させる
+# - データベースのcurrent_usesに+1する
+# - 参加に成功した場合は、ロールを付与して成功ページを表示
+# - 参加に失敗した場合は、エラーページを表示
+# - 参加に成功した場合は、ユーザー名とロール名を表示
+# - 参加に失敗した場合は、エラーメッセージを表示
+#######################
+
 @app.route('/callback')
 def callback():
     # OAuth CSRF対策: stateパラメータ検証
@@ -176,14 +197,33 @@ def callback():
     user_id = int(user_data['id'])
     username = user_data.get('username', 'Unknown')
     
-    # link_idからrole_idを取得
-    role_id = get_role_id_by_link_id(link_id)
-    if not role_id:
+
+    # link_idからrole_idとその他の情報を取得
+    invite_info = get_invite_link_full_info(link_id)
+    if not invite_info:
         app.logger.warning(f"Invalid role link_id={link_id} from {request.remote_addr}")
         return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
     
-    # Join user to guild  
-    join_resp = discord_api('PUT', f'https://discord.com/api/v10/guilds/{GUILD_ID}/members/{user_id}',
+    guild_id = invite_info['guild_id']
+    role_id = invite_info['role_id']
+    max_uses = invite_info['max_uses']
+    current_uses = invite_info['current_uses']
+    expires_at_unix = invite_info['expires_at_unix']
+    
+    # 使用回数が上限に達していないかチェック
+    if max_uses and current_uses >= max_uses:
+        app.logger.warning(f"Max uses exceeded for link_id={link_id} from {request.remote_addr}")
+        return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+    
+    # 有効期限が切れていないかチェック
+    if expires_at_unix:
+        now_unix = int(time.time())
+        if now_unix > expires_at_unix:
+            app.logger.warning(f"Link expired for link_id={link_id} from {request.remote_addr}")
+            return render_error_page("リンクが無効/期限切れです。最初からやり直してください。", 400)
+    
+    # ユーザーをサーバーに参加させる
+    join_resp = discord_api('PUT', f'https://discord.com/api/v10/guilds/{guild_id}/members/{user_id}',
         headers={'Authorization': f'Bot {DISCORD_TOKEN}'},
         json={'access_token': token, 'roles': [str(role_id)]}
     )
@@ -194,20 +234,42 @@ def callback():
         
     if join_resp.status_code in [201, 204]:
         # Try adding role separately if needed
-        discord_api('PUT', f'https://discord.com/api/v10/guilds/{GUILD_ID}/members/{user_id}/roles/{role_id}',
+        discord_api('PUT', f'https://discord.com/api/v10/guilds/{guild_id}/members/{user_id}/roles/{role_id}',
             headers={'Authorization': f'Bot {DISCORD_TOKEN}'}
         )
         
-        return render_success_page(username, "指定されたロール", is_returning=False)
+        # データベースのcurrent_usesに+1する
+        increment_invite_link_usage(link_id)
+        
+        # Get role name for display
+        guild = bot.get_guild(guild_id)
+        role_name = "指定されたロール"
+        if guild:
+            role = guild.get_role(role_id)
+            if role:
+                role_name = role.name
+        
+        return render_success_page(username, role_name, is_returning=False)
         
     elif join_resp.status_code == 200:
         # User already in server, just add role
-        role_resp = discord_api('PUT', f'https://discord.com/api/v10/guilds/{GUILD_ID}/members/{user_id}/roles/{role_id}',
+        role_resp = discord_api('PUT', f'https://discord.com/api/v10/guilds/{guild_id}/members/{user_id}/roles/{role_id}',
             headers={'Authorization': f'Bot {DISCORD_TOKEN}'}
         )
         
         if role_resp and role_resp.status_code == 204:
-            return render_success_page(username, "指定されたロール", is_returning=True)
+            # データベースのcurrent_usesに+1する
+            increment_invite_link_usage(link_id)
+            
+            # Get role name for display
+            guild = bot.get_guild(guild_id)
+            role_name = "指定されたロール"
+            if guild:
+                role = guild.get_role(role_id)
+                if role:
+                    role_name = role.name
+            
+            return render_success_page(username, role_name, is_returning=True)
         
         app.logger.error(f"Role assignment failed for {request.remote_addr}")
         return render_error_page("エラーが発生しました。時間をおいて再度お試しください。", 500)

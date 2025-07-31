@@ -207,3 +207,26 @@ def get_invite_link_full_info(link_id: str) -> dict:
     except Exception as e:
         logger.error(f"Failed to get invite link full info: {e}")
         return None
+
+def increment_invite_link_usage(link_id: str) -> bool:
+    """招待リンクの使用回数を+1する"""
+    try:
+        with get_db_cursor() as cursor:
+            query = """
+                UPDATE role_invite_links 
+                SET current_uses = current_uses + 1
+                WHERE link_id = %s
+            """
+            cursor.execute(query, (link_id,))
+            
+            updated_count = cursor.rowcount
+            if updated_count > 0:
+                logger.info(f"Invite link usage incremented: link_id={link_id}")
+                return True
+            else:
+                logger.warning(f"No invite link found to increment: link_id={link_id}")
+                return False
+                
+    except Exception as e:
+        logger.error(f"Failed to increment invite link usage: {e}")
+        return False
