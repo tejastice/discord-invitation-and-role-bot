@@ -122,12 +122,12 @@ async def check_invite_link_limits(user: discord.User, guild_id: int) -> tuple[b
         # 個人の招待リンク数をチェック
         user_links = get_user_invite_links(user.id)
         if len(user_links) >= FREE_USER_PERSONAL_LINK_LIMIT:
-            return False, f"フリープランでは個人の招待リンクは最大{FREE_USER_PERSONAL_LINK_LIMIT}個までです。プレミアムプランにアップグレードするか、既存のリンクを削除してください。"
+            return False, f"フリープランでは個人の招待リンクは最大{FREE_USER_PERSONAL_LINK_LIMIT}個までです。プレミアムプランへのアップグレードや既存リンクの削除方法については、こちらをご確認ください: {os.getenv('OFFICIAL_WEBSITE_URL', 'https://discord-invitation-and-rol-bote.kei31.com/')}"
         
         # サーバーの招待リンク数をチェック
         guild_links = get_guild_invite_links(guild_id)
         if len(guild_links) >= FREE_USER_SERVER_LINK_LIMIT:
-            return False, f"フリープランでは1サーバーあたりの招待リンクは最大{FREE_USER_SERVER_LINK_LIMIT}個までです。プレミアムプランにアップグレードするか、既存のリンクを削除してください。"
+            return False, f"フリープランでは1サーバーあたりの招待リンクは最大{FREE_USER_SERVER_LINK_LIMIT}個までです。プレミアムプランへのアップグレードや既存リンクの削除方法については、こちらをご確認ください: {os.getenv('OFFICIAL_WEBSITE_URL', 'https://discord-invitation-and-rol-bote.kei31.com/')}"
         
         return True, ""
         
