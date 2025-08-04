@@ -254,7 +254,7 @@ body {
 
 .btn-large {
   padding: var(--space-4) var(--space-8);
-  font-size: 1rem;
+  font-size: 1.125rem !important;
 }
 
 .btn-primary {
@@ -1498,8 +1498,10 @@ body {
   }
   
   .btn-large {
-    padding: var(--space-4) var(--space-6);
-    font-size: 0.875rem;
+    padding: var(--space-6) var(--space-10);
+    font-size: 1.25rem;
+    min-height: 56px;
+    min-width: 300px;
   }
   
   .feature-item,
@@ -1581,6 +1583,26 @@ button:focus-visible,
   body {
     background: white;
     color: black;
+  }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 360px) {
+  .btn-large {
+    padding: var(--space-6) var(--space-8);
+    font-size: 2.375rem;
+    min-height: 64px;
+    width: 100%;
+    max-width: 360px;
+  }
+  
+  .hero-actions {
+    width: 100%;
+  }
+  
+  .hero-actions .btn {
+    width: 100%;
+    text-align: center;
   }
 }
 
