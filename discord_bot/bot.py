@@ -27,7 +27,8 @@ FREE_USER_SERVER_LINK_LIMIT = int(os.getenv('FREE_USER_SERVER_LINK_LIMIT', 10))
 intents = discord.Intents.default()
 
 # Botインスタンス作成
-bot = commands.Bot(command_prefix=None, intents=intents)
+# スラッシュコマンドのみを使用するが、command_prefixは必須なので使わないプレフィックスを設定
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
 async def on_ready():
