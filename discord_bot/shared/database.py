@@ -5,35 +5,36 @@ from psycopg2.extras import RealDictCursor
 from contextlib import contextmanager
 import logging
 import time
+import threading
 
 logger = logging.getLogger(__name__)
 
 # グローバル接続プール
 _connection_pool = None
-_pool_lock = False
+_pool_lock = threading.Lock()
 
 def get_connection_pool():
     """接続プールを取得（存在しなければ作成）"""
-    global _connection_pool, _pool_lock
+    global _connection_pool
 
-    if _connection_pool is None:
-        # 初期化中の二重実行を防ぐ
-        if _pool_lock:
-            time.sleep(0.1)
-            return get_connection_pool()
+    if _connection_pool is not None:
+        return _connection_pool
 
-        _pool_lock = True
+    with _pool_lock:
+        # ダブルチェックロッキング: ロック取得中に別スレッドが初期化完了していないか確認
+        if _connection_pool is not None:
+            return _connection_pool
+
+        DATABASE_URL = os.getenv('DATABASE_URL')
+        if not DATABASE_URL:
+            raise ValueError("DATABASE_URL environment variable is not set")
+
         try:
-            DATABASE_URL = os.getenv('DATABASE_URL')
-            if not DATABASE_URL:
-                raise ValueError("DATABASE_URL environment variable is not set")
-
-            # 接続プールを作成（最小1接続、最大10接続）
             _connection_pool = psycopg2.pool.ThreadedConnectionPool(
                 minconn=1,
                 maxconn=10,
                 dsn=DATABASE_URL,
-                sslmode='prefer',
+                sslmode='require',
                 connect_timeout=10,
                 keepalives=1,
                 keepalives_idle=30,
@@ -45,102 +46,101 @@ def get_connection_pool():
         except Exception as e:
             logger.error(f"Failed to create connection pool: {e}")
             print(f"Failed to create connection pool: {e}")
-            _connection_pool = None
             raise
-        finally:
-            _pool_lock = False
 
     return _connection_pool
+
+def _reset_connection_pool():
+    """接続プールを安全にリセット"""
+    global _connection_pool
+    with _pool_lock:
+        if _connection_pool is not None:
+            try:
+                _connection_pool.closeall()
+            except Exception:
+                pass
+            _connection_pool = None
+            logger.info("Connection pool reset")
+            print("Connection pool reset")
+
+def _check_connection(conn):
+    """接続が実際に有効か SELECT 1 で確認する（PgBouncer対策）"""
+    try:
+        old_autocommit = conn.autocommit
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1")
+        conn.autocommit = old_autocommit
+        return True
+    except Exception:
+        return False
 
 @contextmanager
 def get_db_cursor(max_retries=3):
     """データベースカーソルのコンテキストマネージャー（再接続機能付き）"""
     conn = None
     cursor = None
-    retry_count = 0
+    pool_obj = None
     last_error = None
 
-    while retry_count < max_retries:
+    for attempt in range(1, max_retries + 1):
         try:
-            # 接続プールから接続を取得
             pool_obj = get_connection_pool()
             conn = pool_obj.getconn()
 
-            # 接続が有効か確認
-            conn.isolation_level
+            # 接続の生存確認（PgBouncer対策の核心部分）
+            if not _check_connection(conn):
+                raise OperationalError("Connection health check failed")
 
             conn.autocommit = True
             cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-            # カーソルを返す
-            yield cursor
-
-            # 正常終了したらループを抜ける
-            break
+            break  # 接続取得成功
 
         except (OperationalError, psycopg2.InterfaceError, AttributeError) as e:
             last_error = e
-            retry_count += 1
+            logger.warning(f"Database connection error (attempt {attempt}/{max_retries}): {e}")
+            print(f"Database connection error (attempt {attempt}/{max_retries}): {e}")
 
-            logger.warning(f"Database connection error (attempt {retry_count}/{max_retries}): {e}")
-            print(f"Database connection error (attempt {retry_count}/{max_retries}): {e}")
-
-            # 接続をクリーンアップ
-            if cursor:
+            # 取得した接続があれば破棄
+            if conn and pool_obj:
                 try:
-                    cursor.close()
-                except:
-                    pass
-            if conn:
-                try:
-                    pool_obj = get_connection_pool()
                     pool_obj.putconn(conn, close=True)
-                except:
+                except Exception:
                     pass
-
             conn = None
             cursor = None
 
-            # 接続プールをリセット
-            if retry_count < max_retries:
-                global _connection_pool
-                if _connection_pool:
-                    try:
-                        _connection_pool.closeall()
-                    except:
-                        pass
-                    _connection_pool = None
+            # プール全体をリセット（古い接続が全て無効な可能性が高い）
+            _reset_connection_pool()
 
-                # 少し待ってから再試行
-                time.sleep(min(retry_count * 0.5, 2))
+            if attempt < max_retries:
+                time.sleep(min(attempt * 0.5, 2))
             else:
-                # 最大リトライ回数に達した
-                print(f"Database operation failed after {max_retries} retries: {last_error}")
-                raise last_error
+                raise OperationalError(
+                    f"Database connection failed after {max_retries} attempts"
+                ) from last_error
 
-        except Exception as e:
-            # その他のエラー
-            if conn:
-                try:
-                    conn.rollback()
-                except:
-                    pass
-            print(f"Database operation failed: {e}")
-            raise
-
-        finally:
-            # クリーンアップ
-            if cursor:
-                try:
-                    cursor.close()
-                except:
-                    pass
-            if conn:
-                try:
-                    pool_obj = get_connection_pool()
-                    pool_obj.putconn(conn)
-                except:
-                    pass
+    # ここに到達 = 接続取得成功
+    try:
+        yield cursor
+    except Exception:
+        if conn:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+        raise
+    finally:
+        if cursor:
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if conn and pool_obj:
+            try:
+                pool_obj.putconn(conn)
+            except Exception:
+                pass
 
 def init_database():
     """データベーステーブルを初期化"""
@@ -162,31 +162,31 @@ def init_database():
                     created_at_unix BIGINT NOT NULL
                 )
             """)
-            
+
             # インデックス作成
             cursor.execute("""
-                CREATE INDEX IF NOT EXISTS idx_role_invite_links_guild_id 
+                CREATE INDEX IF NOT EXISTS idx_role_invite_links_guild_id
                 ON role_invite_links(guild_id)
             """)
-            
+
             cursor.execute("""
-                CREATE INDEX IF NOT EXISTS idx_role_invite_links_role_id 
+                CREATE INDEX IF NOT EXISTS idx_role_invite_links_role_id
                 ON role_invite_links(role_id)
             """)
-            
+
             cursor.execute("""
-                CREATE INDEX IF NOT EXISTS idx_role_invite_links_link_id 
+                CREATE INDEX IF NOT EXISTS idx_role_invite_links_link_id
                 ON role_invite_links(link_id)
             """)
-            
+
             cursor.execute("""
-                CREATE INDEX IF NOT EXISTS idx_role_invite_links_created_by 
+                CREATE INDEX IF NOT EXISTS idx_role_invite_links_created_by
                 ON role_invite_links(created_by_user_id)
             """)
-            
+
             logger.info("Database tables initialized successfully")
             print("Database tables initialized successfully")
-            
+
     except Exception as e:
         logger.error(f"Failed to initialize database: {e}")
         print(f"Failed to initialize database: {e}")
