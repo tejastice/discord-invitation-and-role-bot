@@ -192,7 +192,7 @@ def get_invite_link_full_info(link_id: str) -> dict:
     try:
         with get_db_cursor() as cursor:
             query = """
-                SELECT guild_id, role_id, link_id, created_by_user_id, max_uses, 
+                SELECT guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, 
                        current_uses, expires_at, expires_at_unix, created_at, created_at_unix
                 FROM role_invite_links
                 WHERE link_id = %s

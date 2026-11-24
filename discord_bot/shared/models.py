@@ -1,14 +1,14 @@
 from .database import get_db_cursor
 
-def save_invite_link(guild_id: int, role_id: int, link_id: str, created_by_user_id: int, max_uses: int = None, expires_at: str = None, expires_at_unix: int = None, created_at: str = None, created_at_unix: int = None) -> bool:
-    """招待リンクをデータベースに保存"""
+def save_invite_link(guild_id: int, role_id: int, link_id: str, created_by_user_id: int, max_uses: int = None, expires_at: str = None, expires_at_unix: int = None, created_at: str = None, created_at_unix: int = None, role_id_2: int = None) -> bool:
+    """招待リンクをデータベースに保存（role_id_2は任意の2つ目のロール）"""
     try:
         with get_db_cursor() as cursor:
             query = """
-                INSERT INTO role_invite_links (guild_id, role_id, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix)
-                VALUES (%s, %s, %s, %s, %s, 0, %s, %s, %s, %s)
+                INSERT INTO role_invite_links (guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix)
+                VALUES (%s, %s, %s, %s, %s, %s, 0, %s, %s, %s, %s)
             """
-            cursor.execute(query, (guild_id, role_id, link_id, created_by_user_id, max_uses, expires_at, expires_at_unix, created_at, created_at_unix))
+            cursor.execute(query, (guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, expires_at, expires_at_unix, created_at, created_at_unix))
             return True
     except Exception as e:
         print(f"Failed to save invite link: {e}")
@@ -34,7 +34,7 @@ def get_invite_link_info(link_id: str) -> dict:
     try:
         with get_db_cursor() as cursor:
             query = """
-                SELECT guild_id, role_id, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
+                SELECT guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
                 FROM role_invite_links
                 WHERE link_id = %s
             """
@@ -53,7 +53,7 @@ def get_guild_invite_links(guild_id: int) -> list:
     try:
         with get_db_cursor() as cursor:
             query = """
-                SELECT id, guild_id, role_id, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
+                SELECT id, guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
                 FROM role_invite_links
                 WHERE guild_id = %s
                 ORDER BY created_at_unix DESC
@@ -71,7 +71,7 @@ def get_user_invite_links(user_id: int) -> list:
     try:
         with get_db_cursor() as cursor:
             query = """
-                SELECT id, guild_id, role_id, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
+                SELECT id, guild_id, role_id, role_id_2, link_id, created_by_user_id, max_uses, current_uses, expires_at, expires_at_unix, created_at, created_at_unix
                 FROM role_invite_links
                 WHERE created_by_user_id = %s
                 ORDER BY created_at_unix DESC

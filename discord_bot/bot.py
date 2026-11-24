@@ -155,6 +155,18 @@ async def check_invite_link_limits(user: discord.User, guild_id: int) -> tuple[b
 # - 生成した招待リンクを返す
 #######################
 
+def format_role_names(guild: discord.Guild, link: dict) -> str:
+    """招待リンクのロール名を表示用の文字列にする（2つ目のロールがあれば「A + B」）"""
+    if not guild:
+        return "不明ロール"
+    
+    names = []
+    for role_id in (link['role_id'], link.get('role_id_2')):
+        if role_id:
+            role = guild.get_role(role_id)
+            names.append(role.name if role else "不明ロール")
+    return " + ".join(names)
+
 def generate_link_id() -> str:
     """10桁のランダムな半角小文字の英数字を生成"""
     chars = string.ascii_lowercase + string.digits
@@ -207,15 +219,21 @@ def parse_expires_at(expires_str: str) -> tuple:
 @bot.tree.command(name="generate_invite_link", description="ロール招待リンクを生成します")
 @discord.app_commands.describe(
     role="招待リンクを生成するロール", 
+    role2="追加で付与する2つ目のロール（任意）", 
     max_uses="最大使用回数（例：5）", 
     expires_at="有効期限・日本時間（例：7d, 24h, 2024-12-31, 2024-12-31 23:59）"
 )
-async def generate_invite_link(interaction: discord.Interaction, role: discord.Role, max_uses: int = None, expires_at: str = None):
+async def generate_invite_link(interaction: discord.Interaction, role: discord.Role, role2: discord.Role = None, max_uses: int = None, expires_at: str = None):
     """ロール招待リンクを生成するスラッシュコマンド"""
     
     # 管理権限チェック
     if not interaction.user.guild_permissions.manage_guild:
         await interaction.response.send_message("❌ このコマンドを使用するには「サーバー管理」権限が必要です。", ephemeral=True)
+        return
+    
+    # 2つ目のロールは1つ目と別のロールにする
+    if role2 and role2.id == role.id:
+        await interaction.response.send_message("❌ 2つ目のロールには、1つ目とは別のロールを指定してください。", ephemeral=True)
         return
     
     # 招待リンク制限チェック
@@ -252,7 +270,8 @@ async def generate_invite_link(interaction: discord.Interaction, role: discord.R
         expires_at=expires_display, 
         expires_at_unix=expires_unix,
         created_at=created_at_display,
-        created_at_unix=created_at_unix
+        created_at_unix=created_at_unix,
+        role_id_2=role2.id if role2 else None
     ):
         await interaction.response.send_message("❌ データベースへの保存に失敗しました。", ephemeral=True)
         return
@@ -266,7 +285,7 @@ async def generate_invite_link(interaction: discord.Interaction, role: discord.R
         color=0x00ff00
     )
     embed.add_field(name="サーバー", value=interaction.guild.name, inline=True)
-    embed.add_field(name="対象ロール", value=role.mention, inline=True)
+    embed.add_field(name="対象ロール", value=f"{role.mention} + {role2.mention}" if role2 else role.mention, inline=True)
     embed.add_field(name="リンクID", value=link_id, inline=True)
     embed.add_field(name="作成者", value=interaction.user.mention, inline=True)
     embed.add_field(name="招待リンク", value=f"[こちらをクリック]({invite_url})", inline=False)
@@ -324,17 +343,12 @@ class InviteLinkSelectView(discord.ui.View):
                     guild = bot.get_guild(link['guild_id'])
                     guild_name = guild.name if guild else f"不明サーバー({link['guild_id']})"
                     
-                    if guild:
-                        role = guild.get_role(link['role_id'])
-                        role_name = role.name if role else "不明ロール"
-                    else:
-                        role_name = "不明ロール"
+                    role_name = format_role_names(guild, link)
                     
                     label_text = f"{guild_name} - {role_name} ({link['link_id']})"
                 else:
                     # 管理者用：ロール名のみ取得
-                    role = self.guild.get_role(link['role_id'])
-                    role_name = role.name if role else "不明ロール"
+                    role_name = format_role_names(self.guild, link)
                     label_text = f"{role_name} ({link['link_id']})"
                 
                 # 使用可能かどうかをチェック
@@ -358,7 +372,7 @@ class InviteLinkSelectView(discord.ui.View):
                     icon = "✅"
                 
                 select_options.append(discord.SelectOption(
-                    label=f"{icon} {label_text}",
+                    label=f"{icon} {label_text}"[:100],  # Discordの制限で最大100文字
                     value=link['link_id'],
                     description=f"使用: {link['current_uses']}/{link['max_uses'] or '無制限'}"
                 ))
@@ -385,11 +399,7 @@ class InviteLinkSelectView(discord.ui.View):
             guild = bot.get_guild(selected_link['guild_id'])
             guild_name = guild.name if guild else f"不明サーバー({selected_link['guild_id']})"
             
-            if guild:
-                role = guild.get_role(selected_link['role_id'])
-                role_name = role.name if role else "不明ロール"
-            else:
-                role_name = "不明ロール"
+            role_name = format_role_names(guild, selected_link)
             
             # 確認メッセージ
             embed = discord.Embed(
@@ -405,8 +415,7 @@ class InviteLinkSelectView(discord.ui.View):
             confirm_view = ConfirmDeleteView(selected_link_id, f"{guild_name} - {role_name}")
         else:
             # 管理者用：ロール名のみ取得
-            role = self.guild.get_role(selected_link['role_id'])
-            role_name = role.name if role else "不明ロール"
+            role_name = format_role_names(self.guild, selected_link)
             
             # 確認メッセージ
             embed = discord.Embed(
@@ -474,8 +483,7 @@ async def list_server_invite_links(interaction: discord.Interaction):
     
     for i, link in enumerate(invite_links[:10], 1):  # 最大10個まで表示
         # ロール名を取得
-        role = interaction.guild.get_role(link['role_id'])
-        role_name = role.name if role else "不明ロール"
+        role_name = format_role_names(interaction.guild, link)
         
         # 作成者を取得
         try:
@@ -596,11 +604,7 @@ async def list_my_invite_links(interaction: discord.Interaction):
         guild_name = guild.name if guild else f"不明サーバー({link['guild_id']})"
         
         # ロール名を取得
-        if guild:
-            role = guild.get_role(link['role_id'])
-            role_name = role.name if role else "不明ロール"
-        else:
-            role_name = "不明ロール"
+        role_name = format_role_names(guild, link)
         
         # 有効期限の表示（データベースから取得した文字列をそのまま表示）
         expires_text = link['expires_at'] if link['expires_at'] else "無期限"

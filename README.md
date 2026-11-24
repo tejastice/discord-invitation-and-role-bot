@@ -174,6 +174,10 @@ REQ_TIMEOUT=5
    ```
    /generate_invite_link role:@役職名 max_uses:10 expires_at:7d
    ```
+   `role2` を指定すると、2つ目のロールも同時に付与できます（任意）。
+   ```
+   /generate_invite_link role:@役職名 role2:@追加の役職名
+   ```
 
 3. **リンク管理**
    ```

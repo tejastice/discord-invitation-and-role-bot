@@ -152,6 +152,7 @@ def init_database():
                     id SERIAL PRIMARY KEY,
                     guild_id BIGINT NOT NULL,
                     role_id BIGINT NOT NULL,
+                    role_id_2 BIGINT NULL DEFAULT NULL,
                     link_id VARCHAR(255) UNIQUE NOT NULL,
                     created_by_user_id BIGINT NOT NULL,
                     max_uses INTEGER NULL DEFAULT NULL,
@@ -161,6 +162,12 @@ def init_database():
                     created_at VARCHAR(255) NOT NULL,
                     created_at_unix BIGINT NOT NULL
                 )
+            """)
+
+            # 既存のテーブルに、2つ目のロール用の列を追加（任意のロール。未設定はNULL）
+            cursor.execute("""
+                ALTER TABLE role_invite_links
+                ADD COLUMN IF NOT EXISTS role_id_2 BIGINT NULL DEFAULT NULL
             """)
 
             # インデックス作成
